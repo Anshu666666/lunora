@@ -1,0 +1,111 @@
+"use client";
+import Image from "next/image";
+import { gsap } from 'gsap';
+import ScrollTrigger from "gsap/ScrollTrigger";
+import { useEffect, useRef, useState, useLayoutEffect } from 'react';
+import { MouseEvent } from "react";
+import { SignInButton } from "@clerk/nextjs";
+
+export default function Home() {
+  const page1Ref = useRef(null);
+  const page2Ref = useRef(null);
+  const popup = useRef(null);
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  const closePopup = (e: MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    gsap.to(popup.current, {
+      scale: 0.9,
+      duration: 0.4,
+      ease: "power2.in",
+      onComplete: () => {
+        setShowPopup(false);
+      }
+    });
+  };
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Set initial position of page2
+    gsap.set(page2Ref.current, { y: "100%" });
+
+    // Scroll-triggered animation
+    gsap.to(page2Ref.current, {
+      y: "0%",
+      duration: 1,
+      ease: "power2.inOut",
+      scrollTrigger: {
+        trigger: page1Ref.current,
+        start: "top top",
+        end: "bottom+=50% top",
+        scrub: 1,
+        pin: true,
+        anticipatePin: 1,
+      }
+    });
+
+    // Delay popup display by 2 seconds
+    const timer = setTimeout(() => {
+      setShowPopup(true);
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
+  // Use useLayoutEffect so GSAP runs *after* DOM is committed but before paint
+  useLayoutEffect(() => {
+    if (showPopup && popup.current) {
+      gsap.fromTo(popup.current, { scale: 0.9 }, {
+        scale: 1,
+        duration: 1,
+        ease: "power3.out"
+      });
+    }
+  }, [showPopup]);
+
+  return (
+    <>
+      {showPopup && (
+        <div
+          ref={popup}
+          onClick={closePopup}
+          className="fixed inset-0 flex scale-90 items-center justify-center z-50"
+        >
+          <div className="glass rounded-lg shadow-2xl p-8 max-w-md mx-4 text-center border">
+            <h2 className="text-2xl font-bold text-white mb-4">Welcome!</h2>
+            <p className="text-gray-600">This is an animated popup that appears on load.</p>
+            <button onClick={closePopup}>Close</button>
+          </div>
+        </div>
+      )}
+    <div>
+      <div
+        ref={page1Ref}
+        className="page1 relative w-full h-[100vh] flex items-center justify-center text-4xl"
+      >
+        <Image src='/images/home.jpeg' fill style={{ objectFit: 'cover' }} alt="image" />
+        <div className="absolute top-0 z-50">
+          <SignInButton mode="modal" appearance={{
+    elements: {
+      modalBackdrop: "!bg-[#4a90e2]/10",
+      card: " !bg-white !shadow-2xl", // for all Clerk modals
+    }
+  }} />
+        </div>
+      </div>
+
+      <div
+        ref={page2Ref}
+        className="page2 w-full h-[100vh] translate-y-full bg-blue-950 flex items-center justify-center text-4xl text-white fixed top-0 left-0 z-10"
+      >
+        2nd slide
+      </div>
+    </div>
+    </>
+  );
+}
