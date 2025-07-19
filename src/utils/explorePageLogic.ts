@@ -1,8 +1,81 @@
 import { items } from "@/lib/data";
+import { useUser } from '@clerk/nextjs';
+
+let trackingInterval: NodeJS.Timeout | null = null;
+let sessionStartTime: number = 0;
+let currentSessionId: string | null = null;
+
+export function startTrackingSession(userId: string, songId: string) {
+  sessionStartTime = Date.now();
+  
+  // Create new listening session
+  fetch('/api/tracking/start-session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      userId,
+      songId,
+      sessionStart: new Date().toISOString()
+    })
+  }).then(res => res.json())
+    .then(data => {
+      currentSessionId = data.sessionId;
+    });
+}
+
+export function updateTrackingProgress(userId: string, songId: string, currentTime: number, duration: number) {
+  if (!currentSessionId) return;
+  
+  // Update progress every 5 seconds
+  if (trackingInterval) clearInterval(trackingInterval);
+  
+  trackingInterval = setInterval(() => {
+    fetch('/api/tracking/update-progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: currentSessionId,
+        userId,
+        songId,
+        currentTime,
+        duration,
+        timestamp: new Date().toISOString()
+      })
+    });
+  }, 5000);
+}
+
+export function endTrackingSession(userId: string, songId: string, finalTime: number) {
+  if (trackingInterval) {
+    clearInterval(trackingInterval);
+    trackingInterval = null;
+  }
+  
+  if (!currentSessionId) return;
+  
+  const sessionDuration = (Date.now() - sessionStartTime) / 1000; // in seconds
+  
+  fetch('/api/tracking/end-session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      sessionId: currentSessionId,
+      userId,
+      songId,
+      sessionEnd: new Date().toISOString(),
+      durationListened: Math.min(sessionDuration, finalTime),
+      lastPosition: finalTime
+    })
+  });
+  
+  currentSessionId = null;
+}
 
 export function explorePageLogic() {
+  
   const next = document.querySelector('.next');
   const prev = document.querySelector('.prev');
+  
 
   if (next && prev) {
     next.addEventListener('click', () => {
@@ -23,7 +96,7 @@ let currentAudio: HTMLAudioElement | null = null;
 let currentPlayBtn: HTMLElement | null = null;
 
 
-export function handleClick(e: React.MouseEvent<HTMLButtonElement>, itemData: typeof items[number]) {
+export function handleClick(e: React.MouseEvent<HTMLButtonElement>, itemData: typeof items[number], user : any) {
     const button = e.currentTarget,
     item = button.closest(".item"), // Find the closest parent .item
     customDiv = item?.querySelector(".custom") as HTMLElement,
@@ -34,6 +107,11 @@ export function handleClick(e: React.MouseEvent<HTMLButtonElement>, itemData: ty
     prevBtn = item?.querySelector('#prevSong') as HTMLElement,
     nextBtn = item?.querySelector('#nextSong') as HTMLElement,
 playBtn = item?.querySelector('[data-role="play"]') as HTMLElement;
+
+if (!user) {
+    // Redirect to login or show auth modal
+    return;
+  }
 
   // Stop previous audio if any
   if (currentAudio) {
@@ -74,6 +152,8 @@ playBtn = item?.querySelector('[data-role="play"]') as HTMLElement;
         // Set button hover title
         playBtn?.setAttribute('title', 'Pause');
         music.play();
+
+        startTrackingSession(user.id, itemData.id);
     }
 
     function pauseMusic() {
@@ -83,6 +163,8 @@ playBtn = item?.querySelector('[data-role="play"]') as HTMLElement;
         // Set button hover title
         playBtn?.setAttribute('title', 'Play');
         music.pause();
+
+        endTrackingSession(user.id, itemData.id, music.currentTime);
     }
 
     function loadMusic(song: typeof items[number]) {
@@ -100,6 +182,8 @@ playBtn = item?.querySelector('[data-role="play"]') as HTMLElement;
         const formatTime = (time : number) => String(Math.floor(time)).padStart(2, '0');
         durationEl.textContent = `${formatTime(duration / 60)}:${formatTime(duration % 60)}`;
         currentTimeEl.textContent = `${formatTime(currentTime / 60)}:${formatTime(currentTime % 60)}`;
+
+        updateTrackingProgress(user.id, itemData.id, currentTime, duration);
     }
 
     function setProgressBar(e: MouseEvent) {

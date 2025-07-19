@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Song {
+  id       String   @id @default(uuid())
+  song_url String
+  duration Float?   // ⬅️ optional
+  title    String?  // ⬅️ optional
+  listening_sessions ListeningSession[]
+  user_progress     UserProgress[]
+}
+
+model ListeningSession {
+  id               String   @id @default(uuid())
+  user_id          String   // Clerk User ID
+  song_id          String
+  session_start    DateTime @default(now())
+  session_end      DateTime?
+  duration_listened Float   @default(0)
+  last_position    Float    @default(0)
+  completed        Boolean  @default(false)
+  // Relations
+  song Song @relation(fields: [song_id], references: [id])
+}
+
+model UserProgress {
+  id                      String   @id @default(uuid())
+  user_id                 String   // Clerk User ID
+  song_id                 String
+  total_duration_listened Float    @default(0)
+  completion_percentage   Float    @default(0)
+  last_updated            DateTime @default(now())
+  // Relations
+  song    Song   @relation(fields: [song_id], references: [id])
+  @@unique([user_id, song_id])
+}
+

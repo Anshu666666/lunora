@@ -76,7 +76,7 @@ export default function Home() {
           onClick={closePopup}
           className="fixed inset-0 flex scale-90 items-center justify-center z-50"
         >
-          <div className="glass rounded-lg shadow-2xl p-8 max-w-md mx-4 text-center border">
+          <div className="backdrop-blur-md bg-[rgba(17,25,40,0.21)] border-white/20 rounded-xl  shadow-2xl p-8 max-w-md mx-4 text-center border">
             <h2 className="text-2xl font-bold text-white mb-4">Welcome!</h2>
             <p className="text-gray-600">This is an animated popup that appears on load.</p>
             <button onClick={closePopup}>Close</button>

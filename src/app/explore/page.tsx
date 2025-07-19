@@ -4,9 +4,10 @@ import { explorePageLogic } from "@/utils/explorePageLogic";
 import { handleClick } from "@/utils/explorePageLogic";
 import { items } from "@/lib/data";
 import { it } from "node:test";
+import { useUser } from "@clerk/nextjs";
 
 export default function ExplorePage() {
-
+const { user } = useUser();
     useEffect(() => {
         explorePageLogic()
 }, []);
@@ -19,12 +20,12 @@ export default function ExplorePage() {
 
             <div className="slide">
                 {items.map((item) => (
-                    <div className="item" key={item.id}
+                    <div className="item" key={item.name}
                         style={{ backgroundImage: `url(${item.imageUrl})` }}>
                         <div className="content ">
                             <div className="name">{item.name}</div>
                             <div className="des">{item.description}</div>
-                            <button onClick={(e) => handleClick(e, item)} >Play</button>
+                            <button onClick={(e) => handleClick(e, item, user)} >Play</button>
                             <div className="custom bg-[#e7e7e7] text-[#212121] w-[15rem] h-[5rem] hidden">
                                 
                                 <div className="music-duration w-full flex justify-between  ">

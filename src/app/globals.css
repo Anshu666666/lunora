@@ -196,10 +196,3 @@ body {
     top: 3px;
 }
 
-.glass {
- backdrop-filter: blur(6px) saturate(102%);
-    -webkit-backdrop-filter: blur(6px) saturate(102%);
-    background-color: rgba(17, 25, 40, 0.21);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
-}
