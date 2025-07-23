@@ -61,7 +61,7 @@ export default function TrackingPage() {
     }
 
     fetchDashboardData();
-  }, []);
+  });
 
   useEffect(() => {
     if (isLoaded && user) {
