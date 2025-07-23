@@ -1,7 +1,7 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChartListeningHistory } from '@/components/ui/chart-listening-history'
 import { Star } from "lucide-react"; 
@@ -61,7 +61,7 @@ export default function TrackingPage() {
     }
 
     fetchDashboardData();
-  });
+  }, []);
 
   useEffect(() => {
     if (isLoaded && user) {
@@ -69,9 +69,13 @@ export default function TrackingPage() {
     }
   }, [isLoaded, user]);
 
-  const fetchUserProgress = async () => {
+const fetchUserProgress = useCallback(async () => {
+    if (!user) return; // Guard clause in case user is not available
+
     try {
-      const response = await fetch(`/api/tracking/user-progress?userId=${user?.id}`);
+      // Set loading to true at the start of the fetch
+      setLoading(true); 
+      const response = await fetch(`/api/tracking/user-progress?userId=${user.id}`);
       const data = await response.json();
       setUserProgress(data.progress);
       setTotalStats(data.stats);
@@ -80,7 +84,14 @@ export default function TrackingPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]); // The function depends on `user`.
+
+  useEffect(() => {
+    if (isLoaded && user) {
+      fetchUserProgress();
+    }
+  // ✨ FIX 3: Add the memoized `fetchUserProgress` to the dependency array.
+  }, [isLoaded, user, fetchUserProgress]);
 
   if (!isLoaded || loading) {
     return <div>Loading...</div>;
