@@ -10,6 +10,9 @@ export default function Home() {
   const page1Ref = useRef(null);
   const page2Ref = useRef(null);
   const popup = useRef(null);
+  const relax = useRef(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const gradientVideoRef = useRef<HTMLVideoElement>(null);
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -46,6 +49,22 @@ export default function Home() {
       }
     });
 
+      gsap.fromTo(relax.current,{ opacity: 0 },
+        {
+          opacity: 1,
+          yPercent: 12,
+          delay: 0.5, duration: 2
+        }
+      )
+
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.7; // Change this value to your desired speed
+    }
+
+        if (gradientVideoRef.current) {
+      gradientVideoRef.current.playbackRate = 0.3; // Change this value to your desired speed
+    }
+
     // Delay popup display by 2 seconds
     const timer = setTimeout(() => {
       setShowPopup(true);
@@ -76,36 +95,82 @@ export default function Home() {
           onClick={closePopup}
           className="fixed inset-0 flex scale-90 items-center justify-center z-50"
         >
-          <div className="backdrop-blur-md bg-[rgba(17,25,40,0.21)] border-white/20 rounded-xl  shadow-2xl p-8 max-w-md mx-4 text-center border">
+          <div className="backdrop-blur-md bg-[rgba(13,19,30,0.2)] border-white/20 rounded-xl  shadow-2xl p-8 max-w-md mx-4 text-center border">
             <h2 className="text-2xl font-bold text-white mb-4">Welcome!</h2>
             <p className="text-gray-600">This is an animated popup that appears on load.</p>
             <button onClick={closePopup}>Close</button>
           </div>
         </div>
       )}
-    <div>
-      <div
-        ref={page1Ref}
-        className="page1 relative w-full h-[100vh] flex items-center justify-center text-4xl"
-      >
-        <Image src='/images/home.jpeg' fill style={{ objectFit: 'cover' }} alt="image" />
-        <div className="absolute top-0 z-50">
-          <SignInButton mode="modal" appearance={{
-    elements: {
-      modalBackdrop: "!bg-[#4a90e2]/10",
-      card: " !bg-white !shadow-2xl", // for all Clerk modals
-    }
-  }} />
+      <div>
+        <div
+          ref={page1Ref}
+          className="page1 relative w-full h-[100vh] flex items-center justify-center text-4xl"
+        >
+          <div className='fixed top-0 left-0 w-full h-[100vh] z-2 pointer-events-none mix-blend-screen'>
+            {/* <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              // 👇 REMOVE THE BLEND MODE FROM HERE
+              className='w-full h-[100%] object-cover'
+            >
+              <source src="/videos/petals.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video> */}
+          </div>
+          <Image
+            src='/images/original-image.png'
+            alt="image"
+            fill
+            className="bg-image z-0" // Use object-fit, not w-full/h-full
+          />
+          <Image
+            src='/images/relax.png'
+            alt="image"
+            width={1213}
+            height={366}
+            ref={relax}
+            className="fg-image absolute opacity-0 w-[62vw] top-1/2 left-1/2 -translate-y-[60%] -translate-x-[47%] z-1" // Use object-fit, not w-full/h-full
+          />
+          <Image
+            src='/images/layer.png'
+            alt="image"
+            width={1836}
+            height={400}
+            className=" absolute z-2 w-full h-[47.5vh] bottom-0  " // Use object-fit, not w-full/h-full
+          />
+
+          <div className="absolute top-0 z-50">
+            <SignInButton mode="modal" appearance={{
+              elements: {
+                modalBackdrop: "!bg-[#4a90e2]/10",
+                card: " !backdrop-blur-md !bg-[rgba(13,19,30,0.1)] !border-white/20 !rounded-xl !shadow-2xl", // for all Clerk modals
+              }
+            }} />
+          </div>
+        </div>
+
+        <div
+          ref={page2Ref}
+          className="page2 w-full shadow-[0_-20px_40px_10px_rgb(0,0,0,0.3)] rounded-tl-[50px] rounded-tr-[50px] h-[100vh] translate-y-full bg-blue-950 flex items-center justify-center text-4xl text-white fixed top-0 left-0 z-10"
+        >
+          <video
+            ref={gradientVideoRef}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className=' absolute top-0 left-0 w-full h-full rounded-tl-[50px] rounded-tr-[50px] object-cover '
+          >
+            <source src="/videos/download.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className=" absolute inset-0 backdrop-blur-3xl rounded-tl-[50px] rounded-tr-[50px] bg-[#0000] " ></div>
         </div>
       </div>
-
-      <div
-        ref={page2Ref}
-        className="page2 w-full h-[100vh] translate-y-full bg-blue-950 flex items-center justify-center text-4xl text-white fixed top-0 left-0 z-10"
-      >
-        2nd slide
-      </div>
-    </div>
     </>
   );
 }

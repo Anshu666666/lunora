@@ -2,6 +2,14 @@
 
 import { useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { ChartListeningHistory } from '@/components/ui/chart-listening-history'
+import { Star } from "lucide-react"; 
+
+interface ListeningData {
+  date: string;
+  minutesListened: number;
+}
 
 interface UserProgress {
   songId: string;
@@ -15,13 +23,45 @@ interface UserProgress {
 export default function TrackingPage() {
   const { user, isLoaded } = useUser();
   const [userProgress, setUserProgress] = useState<UserProgress[]>([]);
+  const [favoriteSong, setFavoriteSong] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [listeningData, setListeningData] = useState<ListeningData[]>([]);
   const [totalStats, setTotalStats] = useState({
     totalSongs: 0,
     totalDuration: 0,
     totalListened: 0,
     overallCompletion: 0
   });
+
+  useEffect(() => {
+    async function fetchDashboardData() {
+      try {
+        // Fetch data in parallel for better performance
+        const [activityResponse, favoriteResponse] = await Promise.all([
+          fetch('/api/tracking/daily-activity'),
+          fetch('/api/tracking/favorite-song')
+        ]);
+
+        if (activityResponse.ok) {
+          const activityData = await activityResponse.json();
+          setListeningData(activityData);
+        }
+
+        // ✨ 2. Handle the response for the favorite song
+        if (favoriteResponse.ok) {
+          const favoriteData = await favoriteResponse.json();
+          setFavoriteSong(favoriteData.favoriteSong);
+        }
+
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchDashboardData();
+  }, []);
 
   useEffect(() => {
     if (isLoaded && user) {
@@ -51,7 +91,7 @@ export default function TrackingPage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 ">
       <h1 className="text-3xl font-bold mb-6 ">Your Listening Progress</h1>
       
       {/* Overall Stats */}
@@ -119,13 +159,41 @@ export default function TrackingPage() {
                   <span className="text-xs">{song.completionPercentage.toFixed(1)}%</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(song.lastUpdated).toLocaleDateString()}
+                  {new Date(song.lastUpdated).toLocaleString('en-IN', {
+                    timeZone: 'Asia/Kolkata',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true, // Use AM/PM format
+                  })}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <Button>Click Me</Button>
+      <div className="mb-8">
+        <div className="bg-amber-100 text-black p-6 rounded-lg shadow-md">
+          <div className="flex items-center">
+            <Star className="w-6 h-6 mr-3 text-amber-500" />
+            <div>
+              <h3 className="font-semibold text-lg">Your All-Time Favorite</h3>
+              <p className="text-2xl font-bold">
+                {loading ? "Loading..." : favoriteSong || "N/A"}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {loading ? (
+          <p>Loading chart...</p>
+        ) : (
+          <ChartListeningHistory data={listeningData} />
+        )}
     </div>
   );
 }
@@ -135,3 +203,5 @@ function formatTime(seconds: number): string {
   const remainingSeconds = Math.floor(seconds % 60);
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
+
+

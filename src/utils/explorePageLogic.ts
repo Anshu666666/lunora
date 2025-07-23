@@ -23,27 +23,6 @@ export function startTrackingSession(userId: string, songId: string) {
     });
 }
 
-export function updateTrackingProgress(userId: string, songId: string, currentTime: number, duration: number) {
-  if (!currentSessionId) return;
-  
-  // Update progress every 5 seconds
-  if (trackingInterval) clearInterval(trackingInterval);
-  
-  trackingInterval = setInterval(() => {
-    fetch('/api/tracking/update-progress', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId: currentSessionId,
-        userId,
-        songId,
-        currentTime,
-        duration,
-        timestamp: new Date().toISOString()
-      })
-    });
-  }, 5000);
-}
 
 export function endTrackingSession(userId: string, songId: string, finalTime: number) {
   if (trackingInterval) {
@@ -154,6 +133,20 @@ if (!user) {
         music.play();
 
         startTrackingSession(user.id, itemData.id);
+
+
+        if (trackingInterval) clearInterval(trackingInterval);
+    trackingInterval = setInterval(() => {
+        // This heartbeat signal no longer sends currentTime or duration
+        fetch('/api/tracking/update-progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                sessionId: currentSessionId,
+                songId: itemData.id
+            })
+        });
+    }, 5000);
     }
 
     function pauseMusic() {
@@ -163,6 +156,11 @@ if (!user) {
         // Set button hover title
         playBtn?.setAttribute('title', 'Play');
         music.pause();
+
+        if (trackingInterval) {
+        clearInterval(trackingInterval);
+        trackingInterval = null;
+    }
 
         endTrackingSession(user.id, itemData.id, music.currentTime);
     }
@@ -183,7 +181,6 @@ if (!user) {
         durationEl.textContent = `${formatTime(duration / 60)}:${formatTime(duration % 60)}`;
         currentTimeEl.textContent = `${formatTime(currentTime / 60)}:${formatTime(currentTime % 60)}`;
 
-        updateTrackingProgress(user.id, itemData.id, currentTime, duration);
     }
 
     function setProgressBar(e: MouseEvent) {

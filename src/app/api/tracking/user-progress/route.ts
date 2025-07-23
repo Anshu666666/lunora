@@ -37,14 +37,16 @@ export async function GET(req: NextRequest) {
   });
 
   // ✅ Format progress response to match expected structure
-  const formattedProgress = progress.map((entry) => ({
-    song_id: entry.song_id,
-    song_title: entry.song.title,
-    song_duration: entry.song.duration,
-    total_duration_listened: entry.total_duration_listened,
-    completion_percentage: entry.completion_percentage,
-    last_updated: entry.last_updated,
-  }));
+
+const formattedProgress = progress.map((entry) => ({
+    songId: entry.song_id,
+    songTitle: entry.song.title,
+    songDuration: entry.song.duration,
+    totalDurationListened: entry.total_duration_listened,
+    completionPercentage: entry.completion_percentage, // <-- Changed to camelCase
+    lastUpdated: entry.last_updated,
+}));
+
 
   // ✅ Calculate stats
   const songs = await prisma.userProgress.findMany({
@@ -56,24 +58,25 @@ export async function GET(req: NextRequest) {
     },
   });
 
-  const stats = songs.reduce(
-    (acc, item) => {
-      acc.total_songs += 1;
-      acc.total_duration += item.song.duration ?? 0;
-      acc.total_listened += item.total_duration_listened;
-      acc.overall_completion += item.completion_percentage;
-      return acc;
-    },
-    {
-      total_songs: 0,
-      total_duration: 0,
-      total_listened: 0,
-      overall_completion: 0,
-    }
-  );
+// AFTER (The fixed code)
+const initialStats = {
+    totalSongs: 0,
+    totalDuration: 0,
+    totalListened: 0,
+    overallCompletion: 0,
+};
 
-  if (stats.total_songs > 0) {
-    stats.overall_completion = stats.overall_completion / stats.total_songs;
+const stats = songs.reduce((acc, item) => {
+    acc.totalSongs += 1;
+    acc.totalDuration += item.song.duration ?? 0;
+    acc.totalListened += item.total_duration_listened ?? 0;
+    acc.overallCompletion += item.completion_percentage ?? 0;
+    return acc;
+}, initialStats); // <-- Correctly pass the initial value object here
+
+
+  if (stats.totalSongs > 0) {
+    stats.overallCompletion = stats.overallCompletion / stats.totalSongs;
   }
 
   return NextResponse.json({
