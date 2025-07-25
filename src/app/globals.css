@@ -2,7 +2,37 @@
 @import "tw-animate-css";
 @font-face {
   font-family: 'SF Pro';
-  src: url('/fonts/sfpro.otf') format('opentype'); /* or 'truetype' if .ttf */
+  src: url('/fonts/sfpro.OTF') format('opentype'); /* or 'truetype' if .ttf */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Glyseric';
+  src: url('/fonts/glyseric.ttf') format('truetype'); /* or 'truetype' if .ttf */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Gloock';
+  src: url('/fonts/gloock.ttf') format('truetype'); /* or 'truetype' if .ttf */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Unbounded';
+  src: url('/fonts/unbounded.ttf') format('truetype'); /* or 'truetype' if .ttf */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Nothing';
+  src: url('/fonts/nothing.ttf') format('truetype'); /* or 'truetype' if .ttf */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Irish Grover';
+  src: url('/fonts/irish.ttf') format('truetype'); /* or 'truetype' if .ttf */
   font-weight: normal;
   font-style: normal;
 }
@@ -10,7 +40,21 @@
 .sfpro {
     font-family: 'SF Pro', 'sans-serif';
 }
-
+.glyseric {
+    font-family: 'Glyseric', 'serif';
+}
+.gloock {
+    font-family: 'Gloock', 'serif';
+}
+.unbounded {
+    font-family: 'Unbounded', 'sans-serif';
+}
+.nothing {
+    font-family: 'Nothing', 'sans-serif';
+}
+.irish {
+    font-family: 'Irish Grover', 'serif';
+}
 
 body::-webkit-scrollbar {
     display: none;
@@ -62,8 +106,28 @@ body {
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+  --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+  @keyframes shimmer-slide {
+  to {
+    transform: translate(calc(100cqw - 100%), 0);
+    }
+  }
+  @keyframes spin-around {
+  0% {
+    transform: translateZ(0) rotate(0);
+    }
+  15%, 35% {
+    transform: translateZ(0) rotate(90deg);
+    }
+  65%, 85% {
+    transform: translateZ(0) rotate(270deg);
+    }
+  100% {
+    transform: translateZ(0) rotate(360deg);
+    }
+  }
 }
-
 
 body {
   overflow-x: hidden;

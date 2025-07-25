@@ -1,5 +1,7 @@
 import Image from "next/image";
 import AudioPlayer from "./grid-music";
+import DigitalClock from "./clock";
+import { ShimmerButton } from "@/components/magicui/shimmer-button";
 
 export default function Grid() {
     return (
@@ -34,13 +36,13 @@ export default function Grid() {
                     height={112}
                     className=" w-[35%] absolute z-20 top-[1rem] left-[1rem] "
                 />
-                <div className="div7desc text-[0.5rem] absolute top-[1.5rem] right-[1rem] w-[40%] text-right  ">Investigate recent research on meditation’s effects—focus, emotional regulation, even changes in brain structure.</div>
-                <div className="div7desc text-[1rem] text-[#000000] font-bold absolute bottom-[1rem] right-[1rem] w-[40%] text-right  ">The<br/>Science<br/>of<br/>Meditation</div>
+                <div className="div7desc text-[0.5rem] text-[#89C3A3] sfpro absolute top-[1.5rem] right-[1rem] w-[40%] text-right  ">investigate recent research on meditation’s effects—focus, emotional regulation, even changes in brain structure.</div>
+                <div className="div7desc text-[1rem] leading-[0.9rem] text-[#0C5D4E] gloock absolute bottom-[1rem] right-[1rem] w-[40%] text-right  ">The<br/>Science<br/>of<br/>Meditation</div>
                 
             </div>
             <div className="div8 flex grid-item relative !bg-[#00000000] overflow-hidden"> {/* Add overflow-hidden */}
                 <div className="shimmer-button absolute top-0 h-[40%] w-full flex justify-center items-center rounded-[15px] ">
-                    <button className=" border-[1px] bg-black text-[1rem] py-[0.5rem] px-[0.8rem] rounded-[15px] " ><p className="my-auto" >Shimmer Button</p></button>
+                    <ShimmerButton>Shimmer Button</ShimmerButton>
                 </div>
                 <video
                     autoPlay
@@ -59,7 +61,7 @@ export default function Grid() {
                     height={547}
                     className=" w-[95%] h-[95%] absolute top-[10%] left-1/2 -translate-x-1/2 "
                 />
-                <div className="div9head absolute text-[1.2rem] top-[0.6rem] left-[1rem] text-[#885eecbc] ">Track<br/>Your<br/><p className="text-[1.4rem] font-bold italic underline">Stats</p></div>
+                <div className="div9head absolute text-[1.2rem] unbounded font-thin top-[0.6rem] left-[1rem] text-[#885eecbc] ">Track<br/>your<br/><p className="text-[1.6rem] nothing text-shadow-[1px_1px_0px_rgba(255,218,0,1)] ">stats</p></div>
             </div>
             <div className="div10 grid-item relative !bg-[#0F100D] ">
                 <Image
@@ -67,8 +69,9 @@ export default function Grid() {
                     alt="image"
                     width={800}
                     height={800}
-                    className="absolute top-1/2 -translate-y-1/2 rounded-[15px] w-[50%]  z-20 right-[0.5rem] "
+                    className="absolute bottom-[0.4rem] right-[0.4rem] rounded-[15px] w-[50%] z-20  "
                 />
+                <DigitalClock />
             </div>
         </div>
     );
