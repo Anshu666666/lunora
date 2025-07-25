@@ -153,7 +153,7 @@ export default function Home() {
           </video>
                     <div className=" absolute inset-0 backdrop-blur-3xl rounded-tl-[50px] rounded-tr-[50px] bg-[#0000] " >
             <div className="hero h-[100vh] w-[100vw] "></div>
-            <div className="grid h-[100vh] w-[100vw] ">
+            <div className="grid-container h-[100vh] w-[100vw] flex justify-center ">
               <Grid />
             </div>
           </div>

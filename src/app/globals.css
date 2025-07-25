@@ -1,5 +1,26 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@font-face {
+  font-family: 'SF Pro';
+  src: url('/fonts/sfpro.otf') format('opentype'); /* or 'truetype' if .ttf */
+  font-weight: normal;
+  font-style: normal;
+}
+
+.sfpro {
+    font-family: 'SF Pro', 'sans-serif';
+}
+
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -49,8 +70,6 @@ body {
 }
 
 *{
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
@@ -181,7 +200,7 @@ body {
 
 .fa-solid{
     font-size: 1.2rem;
-    color: #666;
+    color: #000000;
     cursor: pointer;
     margin: 0px 10px;
     user-select: none;
@@ -189,7 +208,7 @@ body {
 }
 
 .fa-solid:hover{
-    filter: brightness(40%);
+    color: #272727
 }
 
 .play-button{
@@ -298,4 +317,5 @@ gap: 10px;
 .grid-item{
     background-color: #666;
     border-radius: 15px;
+    overflow: hidden;
 }
