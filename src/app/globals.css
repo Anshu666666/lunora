@@ -21,7 +21,7 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Unbounded:wght@200..900&display=swap');
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -64,6 +64,16 @@ body {
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+.inter {
+  font-family: "Inter", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+.unbounded {
+  font-family: "Unbounded", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
 
 body {
   overflow-x: hidden;
@@ -72,6 +82,7 @@ body {
 *{
     box-sizing: border-box;
 }
+
 
 .container{
     position: absolute;
@@ -319,3 +330,4 @@ gap: 10px;
     border-radius: 15px;
     overflow: hidden;
 }
+
