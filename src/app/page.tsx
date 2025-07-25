@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { MouseEvent } from "react";
 import { SignInButton } from "@clerk/nextjs";
 import Grid from "@/components/ui/grid";
+import Preview from "@/components/ui/preview";
 
 export default function Home() {
   const containerRef = useRef(null);
@@ -39,26 +40,26 @@ export default function Home() {
       scrollTrigger: {
         trigger: page1Ref.current,
         start: "top top",
-        end:  "bottom+=50% top",
+        end: "bottom+=50% top",
         scrub: 3,
         pin: true,
         anticipatePin: 1,
       }
     });
 
-      gsap.fromTo(relax.current,{ opacity: 0 },
-        {
-          opacity: 1,
-          yPercent: 12,
-          delay: 0.5, duration: 2
-        }
-      )
+    gsap.fromTo(relax.current, { opacity: 0 },
+      {
+        opacity: 1,
+        yPercent: 12,
+        delay: 0.5, duration: 2
+      }
+    )
 
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.7; // Change this value to your desired speed
     }
 
-        if (gradientVideoRef.current) {
+    if (gradientVideoRef.current) {
       gradientVideoRef.current.playbackRate = 0.3; // Change this value to your desired speed
     }
 
@@ -102,11 +103,11 @@ export default function Home() {
 
       <div ref={containerRef} className="relative w-full">
         {/* Page 1: The element that gets pinned */}
-          <div
-            ref={page1Ref}
-            className="page1 w-full h-[100vh] flex items-center justify-center text-4xl text-white z-0 relative"
-          >
-                      <Image
+        <div
+          ref={page1Ref}
+          className="page1 w-full h-[100vh] flex items-center justify-center text-4xl text-white z-0 relative"
+        >
+          <Image
             src='/images/original-image.png'
             alt="image"
             fill
@@ -127,7 +128,7 @@ export default function Home() {
             height={400}
             className=" absolute z-2 w-full h-[47.5vh] bottom-0  " // Use object-fit, not w-full/h-full
           />
-                    <div className="absolute top-0 z-50">
+          <div className="absolute top-0 z-50">
             <SignInButton mode="modal" appearance={{
               elements: {
                 modalBackdrop: "!bg-[#4a90e2]/10",
@@ -135,29 +136,32 @@ export default function Home() {
               }
             }} />
           </div>
-          </div>
+        </div>
 
-          <div
-            ref={page2Ref}
-            className="page2 w-full h-[300vh] bg-[#00000000] absolute top-[100vh] left-0 flex flex-col items-center pt-10 text-4xl text-white z-10"
-          >
-                      <video
+        <div
+          ref={page2Ref}
+          className="page2 w-full h-[300vh] bg-[#00000000] absolute top-[100vh] left-0 flex flex-col items-center pt-10 text-4xl text-white z-10"
+        >
+          <video
             ref={gradientVideoRef}
             autoPlay
             loop
             muted
             playsInline
-            className=' absolute top-0 left-0 w-full h-full rounded-tl-[50px] rounded-tr-[50px] object-cover '
-          >
+            className='absolute top-0 left-0 w-full h-[110%] rounded-tl-[50px] rounded-tr-[50px] object-cover '
+          > {/* Increase the Height percent to increase the length of the video background */}
             <source src="/videos/download.mp4" type="video/mp4" />
           </video>
-                    <div className=" absolute inset-0 backdrop-blur-3xl rounded-tl-[50px] rounded-tr-[50px] bg-[#0000] " >
-            <div className="hero h-[100vh] w-[100vw] "></div>
-            <div className="grid-container h-[100vh] w-[100vw] flex justify-center ">
+          <div className="absolute inset-0 backdrop-blur-3xl rounded-tl-[50px] rounded-tr-[50px] bg-[#0000] " >
+            <div className="preview m-3 h-[150vh]">
+              <Preview />
+            </div>
+            <div className="hero h-[70vh] w-[100vw] "></div>
+            <div className="grid h-[100vh] w-[100vw] ">
               <Grid />
             </div>
           </div>
-          </div>
+        </div>
       </div>
     </>
   );
