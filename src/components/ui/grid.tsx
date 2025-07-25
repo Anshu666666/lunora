@@ -1,6 +1,6 @@
 export default function Grid() {
     return (
-        <div className="parent mx-auto my-auto ">
+        <div className="parent">
             <div className="div1 grid-item"> </div>
             <div className="div2 grid-item"> </div>
             <div className="div3 grid-item"> </div>
