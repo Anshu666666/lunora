@@ -5,10 +5,12 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { MouseEvent } from "react";
 import { SignInButton } from "@clerk/nextjs";
+import Grid from "@/components/ui/grid";
 
 export default function Home() {
+  const containerRef = useRef(null);
   const page1Ref = useRef(null);
-  const page2Ref = useRef(null);
+  const page2Ref = useRef<HTMLDivElement>(null);
   const popup = useRef(null);
   const relax = useRef(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -31,19 +33,14 @@ export default function Home() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Set initial position of page2
-    gsap.set(page2Ref.current, { y: "100%" });
-
-    // Scroll-triggered animation
     gsap.to(page2Ref.current, {
       y: "0%",
-      duration: 1,
       ease: "power2.inOut",
       scrollTrigger: {
         trigger: page1Ref.current,
         start: "top top",
-        end: "bottom+=50% top",
-        scrub: 1,
+        end:  "bottom+=50% top",
+        scrub: 3,
         pin: true,
         anticipatePin: 1,
       }
@@ -102,26 +99,14 @@ export default function Home() {
           </div>
         </div>
       )}
-      <div>
-        <div
-          ref={page1Ref}
-          className="page1 relative w-full h-[100vh] flex items-center justify-center text-4xl"
-        >
-          <div className='fixed top-0 left-0 w-full h-[100vh] z-2 pointer-events-none mix-blend-screen'>
-            {/* <video
-              ref={videoRef}
-              autoPlay
-              loop
-              muted
-              playsInline
-              // 👇 REMOVE THE BLEND MODE FROM HERE
-              className='w-full h-[100%] object-cover'
-            >
-              <source src="/videos/petals.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video> */}
-          </div>
-          <Image
+
+      <div ref={containerRef} className="relative w-full">
+        {/* Page 1: The element that gets pinned */}
+          <div
+            ref={page1Ref}
+            className="page1 w-full h-[100vh] flex items-center justify-center text-4xl text-white z-0 relative"
+          >
+                      <Image
             src='/images/original-image.png'
             alt="image"
             fill
@@ -142,8 +127,7 @@ export default function Home() {
             height={400}
             className=" absolute z-2 w-full h-[47.5vh] bottom-0  " // Use object-fit, not w-full/h-full
           />
-
-          <div className="absolute top-0 z-50">
+                    <div className="absolute top-0 z-50">
             <SignInButton mode="modal" appearance={{
               elements: {
                 modalBackdrop: "!bg-[#4a90e2]/10",
@@ -151,13 +135,13 @@ export default function Home() {
               }
             }} />
           </div>
-        </div>
+          </div>
 
-        <div
-          ref={page2Ref}
-          className="page2 w-full shadow-[0_-20px_40px_10px_rgb(0,0,0,0.3)] rounded-tl-[50px] rounded-tr-[50px] h-[100vh] translate-y-full bg-blue-950 flex items-center justify-center text-4xl text-white fixed top-0 left-0 z-10"
-        >
-          <video
+          <div
+            ref={page2Ref}
+            className="page2 w-full h-[300vh] bg-[#00000000] absolute top-[100vh] left-0 flex flex-col items-center pt-10 text-4xl text-white z-10"
+          >
+                      <video
             ref={gradientVideoRef}
             autoPlay
             loop
@@ -166,10 +150,14 @@ export default function Home() {
             className=' absolute top-0 left-0 w-full h-full rounded-tl-[50px] rounded-tr-[50px] object-cover '
           >
             <source src="/videos/download.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
           </video>
-          <div className=" absolute inset-0 backdrop-blur-3xl rounded-tl-[50px] rounded-tr-[50px] bg-[#0000] " ></div>
-        </div>
+                    <div className=" absolute inset-0 backdrop-blur-3xl rounded-tl-[50px] rounded-tr-[50px] bg-[#0000] " >
+            <div className="hero h-[100vh] w-[100vw] "></div>
+            <div className="grid h-[100vh] w-[100vw] ">
+              <Grid />
+            </div>
+          </div>
+          </div>
       </div>
     </>
   );
