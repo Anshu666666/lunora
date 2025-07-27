@@ -10,6 +10,7 @@ import Classic from '../../../public/images/classic.png'
 import WhiteNoise from '../../../public/images/whitenoise.png'
 import Urban from '../../../public/images/urban.png'
 import Asmr from '../../../public/images/asmr.png'
+import Mantras from '../../../public/images/mantras.png'
 
 interface Playlist {
   title: string
@@ -18,26 +19,28 @@ interface Playlist {
 }
 
 const Section2: React.FC = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLDivElement>(null);
+//   const sectionRef = useRef<HTMLDivElement>(null);
+//   const triggerRef = useRef<HTMLDivElement>(null);
 
-  gsap.registerPlugin(ScrollTrigger);
+//   gsap.registerPlugin(ScrollTrigger);
 
-useEffect(()=>{
-  const pin=gsap.fromTo(sectionRef.current,{
-    translateX:0
-  },{
-    translateX:"-300vw",
-    ease:"none",
-    duration:2,
-    scrollTrigger:{
-      trigger: triggerRef.current,
-      start:"top top",
-      end:"100 top",
-      scrub: 0.9,
-    }
-  })
-},[])
+// useEffect(()=>{
+//   const pin=gsap.fromTo(sectionRef.current,{
+//     translateX:0
+//   },{
+//     translateX:"-230vw",
+//     ease:"none",
+//     duration:2,
+//     scrollTrigger:{
+//       trigger: triggerRef.current,
+//       start:"top 15%",
+//       end:"+=235",
+//       scrub: 0.9,
+//       anticipatePin: 1,
+
+//     }
+//   })
+// },[])
 
   const playlists: Playlist[] = [
     {
@@ -56,6 +59,11 @@ useEffect(()=>{
       image: WhiteNoise
     },
     {
+      title: "Mantras & Chants",
+      description: "Traditional chants, powerful mantras, and sacred sound frequencies designed to harmonize mind, body, and spirit through ancient vocal wisdom.",
+      image: Mantras
+    },
+    {
       title: "Urban Beats",
       description: "Therapeutic background sounds including coffee shop ambience, gentle rain on windows, and city soundscapes designed to create familiar comfort and focus.",
       image: Urban
@@ -68,11 +76,11 @@ useEffect(()=>{
   ]
 
   return (
-    <div ref={triggerRef}>
+    <div className='bg-gray-950'>
       <div >
-        <h1 className='text-center'>Our top Playlists</h1>
+        <h1 className='text-left px-14 pt-8 font-sans p-5 font-black'>RECOMMENDED PLAYLISTS</h1>
       </div>
-      <div ref={sectionRef} className='flex gap-4 overflow-hidd en  p-4'>
+      <div className='playlists flex gap-4 p-4 overflow-x-scroll'>
         {playlists.map((playlist, index) => (
           <div key={index} className='flex-shrink-0 flex flex-col items-center p-4 rounded-lg w-[32vw]'>
             <Image 
@@ -82,8 +90,8 @@ useEffect(()=>{
               height={200}
               className='w-78 h-78 object-cover rounded-lg mb-4' 
             />
-            <h2 className='text-lg font-semibold mb-2 text-center'>{playlist.title}</h2>
-            <p className='text-sm w-1/3 text-gray-400 text-center'>{playlist.description}</p>
+            {/* <h2 className='text-lg font-semibold mb-2 text-center'>{playlist.title}</h2> */}
+            <p className='text-sm w-[80%] text-left text-gray-400'>{playlist.description}</p>
           </div>
         ))}
       </div>
