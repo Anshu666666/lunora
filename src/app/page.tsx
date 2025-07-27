@@ -7,6 +7,7 @@ import { MouseEvent } from "react";
 import { SignInButton } from "@clerk/nextjs";
 import Grid from "@/components/ui/grid";
 import Preview from "@/components/ui/preview";
+import Section2 from "@/components/ui/section2";
 
 export default function Home() {
   const containerRef = useRef(null);
@@ -153,13 +154,16 @@ export default function Home() {
             <source src="/videos/download.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 backdrop-blur-3xl rounded-tl-[50px] rounded-tr-[50px] bg-[#0000] " >
-            <div className="preview m-3 h-[150vh]">
+            <div className="preview m-3 h-[120vh]">
               <Preview />
             </div>
-            <div className="hero h-[70vh] w-[100vw] "></div>
             <div className="grid h-[100vh] w-[100vw] ">
               <Grid />
             </div>
+            <div className="hero h-[100vh] w-[100vw] ">
+              <Section2 />
+            </div>
+            
           </div>
         </div>
       </div>
