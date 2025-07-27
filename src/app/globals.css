@@ -36,6 +36,28 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'BN Paradox';
+  src: url('/fonts/bnparadox.otf') format('opentype'); /* or 'truetype' if .ttf */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Ewangi';
+  src: url('/fonts/ewangi.otf') format('opentype'); /* or 'truetype' if .ttf */
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Britannic';
+  src: url('/fonts/britannic.ttf') format('truetype'); /* or 'truetype' if .ttf */
+  font-weight: normal;
+  font-style: normal;
+}
+html {
+    font-size: clamp(13px, 1.3vw, 20px);
+
+}
 
 .sfpro {
     font-family: 'SF Pro', 'sans-serif';
@@ -54,6 +76,15 @@
 }
 .irish {
     font-family: 'Irish Grover', 'serif';
+}
+.ewangi {
+    font-family: 'Ewangi', 'serif';
+}
+.bnparadox {
+    font-family: 'BN Paradox', 'serif';
+}
+.britannic {
+    font-family: 'Britannic', 'serif';
 }
 
 body::-webkit-scrollbar {
@@ -279,7 +310,7 @@ body {
     font-size: 1.2rem;
     color: #000000;
     cursor: pointer;
-    margin: 0px 10px;
+    margin: 0px 7px;
     user-select: none;
     transition: all 0.3s ease;
 }
@@ -373,6 +404,14 @@ body {
   }
 }
 
+.relax {
+  background: linear-gradient(180deg,rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 98%);
+  -webkit-background-clip: text; /* For WebKit browsers (Chrome, Safari) */
+  background-clip: text;
+  color: transparent; /* Makes the text transparent so the background shows through */
+}
+
+
 .parent {
 display: grid;
 grid-template-columns: 1.1fr 0.9fr 0.4fr 0.6fr 0.3fr 1.1fr;
@@ -396,4 +435,6 @@ gap: 10px;
     border-radius: 15px;
     overflow: hidden;
 }
+
+
 

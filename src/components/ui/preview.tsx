@@ -4,72 +4,34 @@ import Medi from "../../../public/images/preview.jpg";
 
 const Preview = () => {
   return (
-    <div className=" text-white mt-10 h-[100vh] ">
       <div className="flex flex-row h-full">
         {/* Left Content - 50% */}
-        <div className="w-1/2 flex items-center justify-center px-8 lg:px-16">
-          <div className="max-w-2xl space-y-8">
-            {/* Main Heading */}
-            <div className="space-y-4">
-              <h1 className="text-6xl md:text-7xl font-bold text-white leading-tight">
-                <span className="text-white inter">
-                  Welcome to 
-                </span>
-                <br/>
-                <span className="bg-gradient-to-r from-green-400 inter  to-cyan-400 bg-clip-text text-transparent">
-                  Lunora
-                </span>
-              </h1>
-
-              {/* Subheading */}
-              <h2 className="text-xl md:text-2xl text-gray-300 font-light tracking-wide">
-                Your Gateway to Inner Peace and Tranquil Soundscapes
-              </h2>
+        <div className="w-1/2 flex flex-col py-[5rem] px-8 lg:px-16  ">
+            <div className='leading-[1.7rem] sfpro text-[1.3rem] ' >
+              welcome to
+              <p className='  bg-gradient-to-br from-white to-slate-700 text-transparent bg-clip-text tracking-[0.2rem] leading-[2.2rem] not-italic unbounded text-[3rem] '>Lunora</p>
             </div>
-
-            {/* Description */}
-            <div className="py-6 inter">
-              <p className="text-gray-400 mt-2 text-lg leading-relaxed">
-                Discover a curated collection of meditation sounds designed to guide you toward deeper relaxation and mindful awareness. Our immersive audio library features nature sounds, ambient music, binaural beats, and guided meditations crafted to help you find balance in today's chaotic world. Whether you're seeking stress relief, better sleep, or enhanced focus, create your perfect sonic environment for transformation.
-              </p>
-
-              <div className="h-px w-24 bg-gradient-to-r from-green-400 to-transparent"></div>
-            </div>
-
-            {/* Quotes */}
-            <div className="">
-              <blockquote className="border-l-2 border-green-400 pl-6 space-y-3">
-                <p className="text-gray-300 text-lg italic">
+            <div className="text-[1.3rem] text-gray-300 font-light mt-[0.8rem] mb-[2rem] tracking-wide">Your Gateway to Inner Peace and Tranquil Soundscapes</div>
+            <div className='text-[1.2rem] sfpro tracking-wider '> Discover curated collection of meditation sounds designed to guide you towards deeper relaxation and mindful awareness. Whether you're seeking stress relief better sleep or enhanced focus, create your perfect sonic environment for transformation.</div>
+            <blockquote className="border-l-2 border-green-400 pl-[1rem] mt-[3rem]  space-y-3">
+                <p className=" mix-blend-difference text-[1rem] text-[#cbcbcb]  italic">
                   "In the stillness between sounds, we find the profound silence where true healing begins. This platform doesn't just play audio—it opens doorways to inner wisdom."
                 </p>
-                <cite className="text-green-400 text-sm font-medium block">
+                <cite className="text-green-400 text-[0.8rem] font-medium block">
                   —  Sarah Mitchell, Mindfulness Coach & Sound Therapist
                 </cite>
-              </blockquote>
-
-             
-            </div>
-
-            {/* CTA Button */}
-            {/* <div className="pt-4">
-              <button className="group relative px-8 py-4 bg-gradient-to-r from-green-500 to-cyan-500 text-black font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-green-500/25">
-                <span className="relative z-10">Experience the Future</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </button>
-            </div> */}
-          </div>
+            </blockquote>
         </div>
-        
+
         {/* Right Content - 50% */}
-        <div className="w-1/2 flex items-center justify-center p-8">
+        <div className="w-1/2 flex items-center justify-center p-[4rem] ">
           <Image 
             src={Medi} 
             alt="meditation image" 
-            className=" rounded-2xl object-contain" 
+            className=" rounded-2xl shadow-[4px_4px_10px_rgba(255,255,255,0.1)] object-contain" 
           />
         </div>
       </div>
-    </div>
   )
 }
 

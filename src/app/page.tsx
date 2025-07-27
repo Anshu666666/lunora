@@ -2,9 +2,11 @@
 import Image from "next/image";
 import { gsap } from 'gsap';
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { LogIn } from 'lucide-react';
 import { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { MouseEvent } from "react";
 import { SignInButton } from "@clerk/nextjs";
+import NavBar from "@/components/ui/navbar";
 import Grid from "@/components/ui/grid";
 import Preview from "@/components/ui/preview";
 
@@ -34,18 +36,36 @@ export default function Home() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.to(page2Ref.current, {
-      y: "0%",
-      ease: "power2.inOut",
-      scrollTrigger: {
-        trigger: page1Ref.current,
-        start: "top top",
-        end: "bottom+=50% top",
-        scrub: 3,
-        pin: true,
-        anticipatePin: 1,
-      }
-    });
+gsap.to(page2Ref.current, {
+    y: "0%",
+    duration: 5,
+    ease: "power2.inOut",
+    scrollTrigger: {
+      trigger: page1Ref.current,
+      start: "top top",
+      end: "bottom top", // Increased scroll distance
+      scrub: true, // Smoother lag
+      pin: true,
+      anticipatePin: 1,
+      // Add this for debugging
+          onUpdate: (self) => {
+      console.log("Scrub progress:", self.progress);
+    }
+    }
+  });
+
+    // Temporary test animation
+gsap.to(".test-element", {
+  x: 500,
+  scrollTrigger: {
+    trigger: page1Ref.current,
+    start: "top center",
+    end: "bottom center",
+    scrub: 3,
+
+  }
+});
+
 
     gsap.fromTo(relax.current, { opacity: 0 },
       {
@@ -87,7 +107,21 @@ export default function Home() {
 
   return (
     <>
-      {showPopup && (
+
+      <div className=" z-50 fixed top-[0.6rem] right-[1rem] ">
+        <SignInButton mode="modal" appearance={{
+          elements: {
+            modalBackdrop: "!bg-[#4a90e2]/10",
+            card: " !backdrop-blur-md !bg-[rgba(13,19,30,0.1)] !border-white/20 !rounded-xl !shadow-2xl", // for all Clerk modals
+          }
+        }}>
+          <div className=" flex h-[45px] px-[1.5rem]  items-center bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] rounded-2xl gap-[0.5rem] text-[1rem] ">
+            {/* <LogIn size={16} /> */}
+            <span className="text-[1.2rem] sfpro " >Sign In</span>
+          </div>
+        </SignInButton>
+      </div>
+      {/* {showPopup && (
         <div
           ref={popup}
           onClick={closePopup}
@@ -99,7 +133,8 @@ export default function Home() {
             <button onClick={closePopup}>Close</button>
           </div>
         </div>
-      )}
+      )} */}
+
 
       <div ref={containerRef} className="relative w-full">
         {/* Page 1: The element that gets pinned */}
@@ -113,14 +148,7 @@ export default function Home() {
             fill
             className="bg-image z-0" // Use object-fit, not w-full/h-full
           />
-          <Image
-            src='/images/relax.png'
-            alt="image"
-            width={1213}
-            height={366}
-            ref={relax}
-            className="fg-image absolute opacity-0 w-[62vw] top-1/2 left-1/2 -translate-y-[60%] -translate-x-[47%] z-1" // Use object-fit, not w-full/h-full
-          />
+          <div className="relax absolute text-[18rem] w-[62vw] top-1/2 left-1/2 -translate-y-[46%] -translate-x-[46%] z-1 britannic">relax.</div>
           <Image
             src='/images/layer.png'
             alt="image"
@@ -128,19 +156,11 @@ export default function Home() {
             height={400}
             className=" absolute z-2 w-full h-[47.5vh] bottom-0  " // Use object-fit, not w-full/h-full
           />
-          <div className="absolute top-0 z-50">
-            <SignInButton mode="modal" appearance={{
-              elements: {
-                modalBackdrop: "!bg-[#4a90e2]/10",
-                card: " !backdrop-blur-md !bg-[rgba(13,19,30,0.1)] !border-white/20 !rounded-xl !shadow-2xl", // for all Clerk modals
-              }
-            }} />
-          </div>
         </div>
 
         <div
           ref={page2Ref}
-          className="page2 w-full h-[300vh] bg-[#00000000] absolute top-[100vh] left-0 flex flex-col items-center pt-10 text-4xl text-white z-10"
+          className="page2 w-full h-[320vh] bg-[#00000000] shadow-[0px_-5px_10px_rgba(0,0,0,0.3)] rounded-tl-[50px] rounded-tr-[50px] absolute top-[120vh] left-0 flex flex-col items-center pt-10 text-4xl text-white z-10"
         >
           <video
             ref={gradientVideoRef}
@@ -148,18 +168,19 @@ export default function Home() {
             loop
             muted
             playsInline
-            className='absolute top-0 left-0 w-full h-[110%] rounded-tl-[50px] rounded-tr-[50px] object-cover '
+            className='absolute top-0 left-0 w-full h-[100%] rounded-tl-[50px] rounded-tr-[50px] object-cover '
           > {/* Increase the Height percent to increase the length of the video background */}
-            <source src="/videos/download.mp4" type="video/mp4" />
+            <source src="/videos/bg-neon.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 backdrop-blur-3xl rounded-tl-[50px] rounded-tr-[50px] bg-[#0000] " >
-            <div className="preview m-3 h-[150vh]">
+            <div className="preview m-3 h-[100vh]">
               <Preview />
             </div>
-            <div className="hero h-[70vh] w-[100vw] "></div>
-            <div className="grid h-[100vh] w-[100vw] ">
+            <div className="grid h-[120vh] w-[100vw] ">
               <Grid />
             </div>
+            <div className="hero h-[100vh] w-[100vw] bg-amber-800 ">Hello</div>
+
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ export interface ShimmerButtonProps extends ComponentPropsWithoutRef<"button"> {
   shimmerSize?: string;
   borderRadius?: string;
   shimmerDuration?: string;
+  textColor?: string; // Add this
   background?: string;
   className?: string;
   children?: React.ReactNode;
@@ -23,6 +24,7 @@ export const ShimmerButton = React.forwardRef<
       shimmerDuration = "3s",
       borderRadius = "100px",
       background = "rgba(0, 0, 0, 1)",
+      textColor = "white",
       className,
       children,
       ...props
@@ -39,10 +41,11 @@ export const ShimmerButton = React.forwardRef<
             "--speed": shimmerDuration,
             "--cut": shimmerSize,
             "--bg": background,
+            "--text-color": textColor, // Add this
           } as CSSProperties
         }
         className={cn(
-          "group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap border border-white/10 px-6 py-3 text-white [background:var(--bg)] [border-radius:var(--radius)] dark:text-black",
+          "group unbounded relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap border border-white/10 px-6 py-3 text-white [background:var(--bg)] [border-radius:var(--radius)]",
           "transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px",
           className,
         )}
