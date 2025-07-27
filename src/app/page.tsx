@@ -161,7 +161,7 @@ gsap.to(".test-element", {
 
         <div
           ref={page2Ref}
-          className="page2 w-full h-[320vh] bg-[#00000000] shadow-[0px_-5px_10px_rgba(0,0,0,0.3)] rounded-tl-[50px] rounded-tr-[50px] absolute top-[120vh] left-0 flex flex-col items-center pt-10 text-4xl text-white z-10"
+          className="page2 w-full h-[340vh] bg-[#00000000] shadow-[0px_-5px_10px_rgba(0,0,0,0.3)] rounded-tl-[50px] rounded-tr-[50px] absolute top-[120vh] left-0 flex flex-col items-center pt-10 text-4xl text-white z-10"
         >
           <video
             ref={gradientVideoRef}
@@ -180,7 +180,7 @@ gsap.to(".test-element", {
             <div className="grid h-[120vh] w-[100vw] ">
               <Grid />
             </div>
-            <div className="hero mt-14 h-fit w-[100vw] ">
+            <div className="hero w-[100vw] ">
               <Section2 />
             </div>
             

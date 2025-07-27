@@ -76,9 +76,9 @@ const Section2: React.FC = () => {
   ]
 
   return (
-    <div className='bg-gray-950'>
+    <div className=' '>
       <div >
-        <h1 className='text-left px-14 pt-8 font-sans p-5 font-black'>RECOMMENDED PLAYLISTS</h1>
+        <h1 className='text-left px-14 font-sans p-5 font-black'>RECOMMENDED PLAYLISTS</h1>
       </div>
       <div className='playlists flex gap-4 p-4 overflow-x-scroll'>
         {playlists.map((playlist, index) => (
