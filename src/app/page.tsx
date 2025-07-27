@@ -173,15 +173,15 @@ gsap.to(".test-element", {
           > {/* Increase the Height percent to increase the length of the video background */}
             <source src="/videos/bg-neon.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 backdrop-blur-3xl rounded-tl-[50px] rounded-tr-[50px] bg-[#0000] " >
-            <div className="preview m-3 h-[100vh]">
+          <div className="absolute inset-0 backdrop-blur-3xl mb-0 rounded-tl-[50px] rounded-tr-[50px] bg-[#0000] " >
+            <div className="preview m-3 h-[120vh]">
               <Preview />
             </div>
             <div className="grid h-[120vh] w-[100vw] ">
               <Grid />
             </div>
-            <div className="hero h-[100vh] w-[100vw] bg-amber-700 ">
-              {/* <Section2 /> */}
+            <div className="hero mt-14 h-fit w-[100vw] ">
+              <Section2 />
             </div>
             
           </div>

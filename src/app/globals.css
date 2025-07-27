@@ -437,4 +437,23 @@ gap: 10px;
 }
 
 
+/*Custom scrollbar*/
+.playlists::-webkit-scrollbar {
+  width: 8px;
+}
 
+.playlists::-webkit-scrollbar-track {
+  background: rgb(0, 0, 0);
+}
+
+.playlists::-webkit-scrollbar-thumb {
+  background: rgba(95, 95, 95, 0.438);
+  border-radius: 20px;
+}
+
+.playlists::-webkit-scrollbar-thumb:hover {
+  background: rgba(95, 95, 95, 0.738);
+}
+.playlists::-webkit-scrollbar-button {
+  display: none;
+}
