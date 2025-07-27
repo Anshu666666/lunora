@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { PrismaClient } from '@prisma/client';
 // Import date-fns for easy date manipulation
-import { subMonths, eachDayOfInterval, format, startOfDay } from 'date-fns';
+import { subMonths, subDays, eachDayOfInterval, format, startOfDay } from 'date-fns';
 
 const prisma = new PrismaClient();
 
@@ -14,9 +14,19 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 1. Define the date range for the last 3 months
+    const { searchParams } = new URL(req.url);
+    const period = searchParams.get('period') || '30d'; // Default to '30d'
+
+    // 1. Define the date range based on the 'period' parameter
     const endDate = new Date();
-    const startDate = startOfDay(subMonths(endDate, 3));
+    let startDate;
+
+    if (period === '3m') {
+        startDate = startOfDay(subMonths(endDate, 3));
+    } else {
+        // Default to 30 days
+        startDate = startOfDay(subDays(endDate, 30));
+    }
 
     // 2. Fetch all listening sessions within this date range
     const sessions = await prisma.listeningSession.findMany({

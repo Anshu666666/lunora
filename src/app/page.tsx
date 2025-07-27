@@ -116,7 +116,7 @@ gsap.to(".test-element", {
             card: " !backdrop-blur-md !bg-[rgba(13,19,30,0.1)] !border-white/20 !rounded-xl !shadow-2xl", // for all Clerk modals
           }
         }}>
-          <div className=" flex h-[45px] px-[1.5rem]  items-center bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] rounded-2xl gap-[0.5rem] text-[1rem] ">
+          <div className=" flex h-[45px] px-[1.5rem] cursor-pointer text-gray-200  items-center bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] rounded-2xl gap-[0.5rem] text-[1rem] ">
             {/* <LogIn size={16} /> */}
             <span className="text-[1.2rem] sfpro " >Sign In</span>
           </div>
@@ -174,14 +174,14 @@ gsap.to(".test-element", {
             <source src="/videos/bg-neon.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 backdrop-blur-3xl rounded-tl-[50px] rounded-tr-[50px] bg-[#0000] " >
-            <div className="preview m-3 h-[120vh]">
+            <div className="preview m-3 h-[100vh]">
               <Preview />
             </div>
-            <div className="grid h-[100vh] w-[100vw] ">
+            <div className="grid h-[120vh] w-[100vw] ">
               <Grid />
             </div>
-            <div className="hero h-[100vh] w-[100vw] ">
-              <Section2 />
+            <div className="hero h-[100vh] w-[100vw] bg-amber-700 ">
+              {/* <Section2 /> */}
             </div>
             
           </div>

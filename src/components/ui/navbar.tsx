@@ -1,8 +1,7 @@
 'use client'
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
-import { Home, Settings, Bell, User, ChartLine, AudioLines } from 'lucide-react';
-
+import { Home, ChartLine, AudioLines } from 'lucide-react'; // Removed unused imports
 
 // --- MenuBar Component ---
 
@@ -20,23 +19,27 @@ const menuItems: MenuItem[] = [
     label: "Home",
     href: "/",
     gradient: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(37,99,235,0.06) 50%, rgba(29,78,216,0) 100%)",
-    iconColor: "group-hover:text-blue-500 dark:group-hover:text-blue-400",
+    // MODIFIED: Removed the dark mode variant for a consistent hover color
+    iconColor: "group-hover:text-blue-400",
   },
   {
     icon: <AudioLines className="h-5 w-5" />,
     label: "Explore",
     href: "explore",
     gradient: "radial-gradient(circle, rgba(249,115,22,0.15) 0%, rgba(234,88,12,0.06) 50%, rgba(194,65,12,0) 100%)",
-    iconColor: "group-hover:text-orange-500 dark:group-hover:text-orange-400",
+    // MODIFIED: Removed the dark mode variant
+    iconColor: "group-hover:text-orange-400",
   },
   {
     icon: <ChartLine className="h-5 w-5" />,
     label: "Tracking",
     href: "tracking",
     gradient: "radial-gradient(circle, rgba(34,197,94,0.15) 0%, rgba(22,163,74,0.06) 50%, rgba(21,128,61,0) 100%)",
-    iconColor: "group-hover:text-green-500 dark:group-hover:text-green-400",
+    // MODIFIED: Removed the dark mode variant
+    iconColor: "group-hover:text-green-400",
   },
 ];
+
 
 // Animation variants for different parts of the menu
 const itemVariants: Variants = {
@@ -115,7 +118,8 @@ function NavBar(): React.JSX.Element {
               {/* Front-facing menu item */}
               <motion.a
                 href={item.href}
-                className="flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors rounded-xl"
+                // MODIFIED: Removed `dark:text-gray-300` and added `text-gray-200`
+                className="flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-gray-200 group-hover:text-white transition-colors rounded-xl"
                 variants={itemVariants}
                 transition={sharedTransition}
                 style={{
@@ -126,12 +130,13 @@ function NavBar(): React.JSX.Element {
                 <span className={`transition-colors duration-300 ${item.iconColor}`}>
                   {item.icon}
                 </span>
-                <span className="sfpro">{item.label}</span>
+                <span className="sfpro text-[1rem] ">{item.label}</span>
               </motion.a>
               {/* Back-facing menu item for the 3D flip effect */}
               <motion.a
                 href={item.href}
-                className="flex items-center gap-2 px-4 py-2 absolute inset-0 z-10 bg-transparent text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors rounded-xl"
+                // MODIFIED: Removed `dark:text-gray-300` and added `text-gray-200`
+                className="flex items-center gap-2 px-4 py-2 absolute inset-0 z-10 bg-transparent text-gray-200 group-hover:text-white transition-colors rounded-xl"
                 variants={backVariants}
                 transition={sharedTransition}
                 style={{
@@ -143,7 +148,7 @@ function NavBar(): React.JSX.Element {
                 <span className={`transition-colors duration-300 ${item.iconColor}`}>
                   {item.icon}
                 </span>
-                <span className="font-medium">{item.label}</span>
+                <span className="sfpro text-[1.2rem] ">{item.label}</span>
               </motion.a>
             </motion.div>
           </motion.li>
