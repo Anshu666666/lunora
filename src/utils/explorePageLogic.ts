@@ -1,6 +1,8 @@
 import { items } from "@/lib/data";
 import { useUser } from '@clerk/nextjs';
 
+let musicTimer: NodeJS.Timeout | null = null;
+let countdownInterval: NodeJS.Timeout | null = null;
 let trackingInterval: NodeJS.Timeout | null = null;
 let sessionStartTime: number = 0;
 let currentSessionId: string | null = null;
@@ -85,7 +87,9 @@ export function handleClick(e: React.MouseEvent<HTMLButtonElement>, itemData: ty
     playerProgress = item?.querySelector('.player-progress') as HTMLElement,
     prevBtn = item?.querySelector('#prevSong') as HTMLElement,
     nextBtn = item?.querySelector('#nextSong') as HTMLElement,
-playBtn = item?.querySelector('[data-role="play"]') as HTMLElement;
+    playBtn = item?.querySelector('[data-role="play"]') as HTMLElement;
+    const timerDisplay = item?.querySelector('#timer-display') as HTMLElement;
+    const timerButtons = item?.querySelectorAll('.timer-btn') as NodeListOf<HTMLElement>;
 
 if (!user) {
     // Redirect to login or show auth modal
@@ -160,9 +164,48 @@ if (!user) {
         if (trackingInterval) {
         clearInterval(trackingInterval);
         trackingInterval = null;
-    }
+        }
+
+        if (musicTimer) clearTimeout(musicTimer);
+        if (countdownInterval) clearInterval(countdownInterval);
+        if (timerDisplay) timerDisplay.textContent = ""; // Clear display
 
         endTrackingSession(user.id, itemData.id, music.currentTime);
+    }
+
+    function startMusicTimer(durationInSeconds: number) {
+        // Clear any previous timers
+        if (musicTimer) clearTimeout(musicTimer);
+        if (countdownInterval) clearInterval(countdownInterval);
+
+        // 1. Trigger the playMusic function
+        if (!isPlaying) {
+            playMusic();
+        }
+
+        // 2. Set the main timer to pause the music when it ends
+        musicTimer = setTimeout(() => {
+            pauseMusic(); // This will be called after the duration
+            if (timerDisplay) timerDisplay.textContent = 'Timer Finished!';
+        }, durationInSeconds * 1000);
+
+        // 3. Set the countdown interval to update the display every second
+        let remainingTime = durationInSeconds;
+        const updateCountdown = () => {
+            const minutes = Math.floor(remainingTime / 60);
+            const seconds = remainingTime % 60;
+            if (timerDisplay) {
+                timerDisplay.textContent = `Time left: ${minutes}:${String(seconds).padStart(2, '0')}`;
+            }
+            remainingTime--;
+
+            if (remainingTime < 0) {
+                if (countdownInterval) clearInterval(countdownInterval);
+            }
+        };
+        
+        updateCountdown(); // Run once immediately
+        countdownInterval = setInterval(updateCountdown, 1000);
     }
 
     function loadMusic(song: typeof items[number]) {
@@ -195,7 +238,17 @@ if (!user) {
     }
 
     playBtn.addEventListener('click', togglePlay);
-        nextBtn.addEventListener('click', () => {
+
+    timerButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const time = parseInt(button.dataset.time || '0', 10);
+                if (time > 0) {
+                    startMusicTimer(time);
+                }
+            });
+        });
+
+    nextBtn.addEventListener('click', () => {
       const items = document.querySelectorAll('.item');
       document.querySelector('.slide')?.appendChild(items[0]);
     });
@@ -204,8 +257,9 @@ if (!user) {
       const items = document.querySelectorAll('.item');
       document.querySelector('.slide')?.prepend(items[items.length - 1]);
     });
-music.addEventListener('timeupdate', updateProgressBar);
-playerProgress.addEventListener('click', setProgressBar);
+    
+    music.addEventListener('timeupdate', updateProgressBar);
+    playerProgress.addEventListener('click', setProgressBar);
 
-loadMusic(itemData);
+    loadMusic(itemData);
 }
