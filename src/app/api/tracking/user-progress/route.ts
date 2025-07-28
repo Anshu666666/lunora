@@ -5,18 +5,23 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
-  const { userId } = await auth();
+  try {
+    const { userId } = await auth();
 
-  if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+    console.log('User ID from auth:', userId);
 
-  const url = new URL(req.url);
-  const requestedUserId = url.searchParams.get('userId');
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-  if (requestedUserId !== userId) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+    const url = new URL(req.url);
+    const requestedUserId = url.searchParams.get('userId');
+
+    console.log('Requested User ID:', requestedUserId);
+
+    if (requestedUserId !== userId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
 
   // ✅ Get user progress data
   const progress = await prisma.userProgress.findMany({
@@ -35,6 +40,9 @@ export async function GET(req: NextRequest) {
       },
     },
   });
+
+  console.log('Found progress entries:', progress.length);
+  console.log('Progress data:', progress);
 
   // ✅ Format progress response to match expected structure
 
@@ -83,4 +91,11 @@ const stats = songs.reduce((acc, item) => {
     progress: formattedProgress,
     stats,
   });
+  } catch (error) {
+    console.error('Error in user-progress API:', error);
+    return NextResponse.json(
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
+  }
 }
