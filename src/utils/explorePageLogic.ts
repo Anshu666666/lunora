@@ -153,7 +153,11 @@ if (!user) {
     }, 5000);
     }
 
-    function pauseMusic() {
+    function pauseMusic(options: { isTimerCompletion?: boolean } = {}) {
+    const { isTimerCompletion = false } = options; // Default to false
+
+        if (!isPlaying) return; // Prevent multiple calls
+
         isPlaying = false;
         // Change pause button icon
         playBtn?.classList.replace('fa-pause', 'fa-play');
