@@ -69,34 +69,43 @@ export default function Carousel({ items: initialItems }: CarouselProps) {
   const { user } = useUser();
   const [orderedItems, setOrderedItems] = useState<Item[]>(initialItems);
 
-  const handleNext = () => {
-    setOrderedItems(prevItems => {
-      // Move the first item to the end of the array
-      const newItems = [...prevItems];
-      const firstItem = newItems.shift();
-      if (firstItem) newItems.push(firstItem);
-      return newItems;
-    });
-  };
+const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
+        // 1. Find the container from the clicked button
+        const container = e.currentTarget.closest('.container');
+        if (!container) return;
 
-  const handlePrev = () => {
-    setOrderedItems(prevItems => {
-      // Move the last item to the beginning of the array
-      const newItems = [...prevItems];
-      const lastItem = newItems.pop();
-      if (lastItem) newItems.unshift(lastItem);
-      return newItems;
-    });
-  };
+        // 2. Find the .slide and .item elements within the container
+        const slide = container.querySelector('.slide');
+        const items = slide?.querySelectorAll('.item');
+
+        // 3. Manipulate the DOM directly
+        if (slide && items && items.length > 0) {
+            slide.appendChild(items[0]);
+        }
+    };
+
+    const handlePrev = (e: React.MouseEvent<HTMLButtonElement>) => {
+        // 1. Find the container from the clicked button
+        const container = e.currentTarget.closest('.container');
+        if (!container) return;
+
+        // 2. Find the .slide and .item elements
+        const slide = container.querySelector('.slide');
+        const items = slide?.querySelectorAll('.item');
+
+        // 3. Prepend the last item to the beginning of the slide
+        if (slide && items && items.length > 0) {
+            slide.prepend(items[items.length - 1]);
+        }
+    };
 
   return (
     <div className="container">
       <div className="slide">
-        {orderedItems.map((item) => (
-          // Pass the handleClick function with the correct item and user context
-          <ItemCard 
-            key={item.id} 
-            item={item} 
+        {initialItems.map((item) => (
+          <ItemCard
+            key={item.id}
+            item={item}
             onPlayClick={(e) => handleClick(e, item, user)}
           />
         ))}
