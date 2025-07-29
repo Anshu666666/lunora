@@ -7,6 +7,7 @@ import { ChartListeningHistory } from '@/components/ui/chart-listening-history'
 import { Star } from "lucide-react";
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { useMonthlyStats } from './useMonthlyStats';
+import WeatherCard from '@/components/ui/weather-card';
 
 interface ListeningData {
   date: string;
@@ -90,11 +91,11 @@ export default function TrackingPage() {
       console.log('Fetching user progress for userId:', user.id);
       const response = await fetch(`/api/tracking/user-progress?userId=${user.id}`);
       console.log('Response status:', response.status);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
       console.log('API Response data:', data);
       setUserProgress(data.progress || []);
@@ -201,6 +202,7 @@ export default function TrackingPage() {
         </div>
 
         <div className="tracking-grid-top-right h-[25rem] rounded-[20px] md:w-[50%] w-full md:ml-[0.5rem] md:mt-0 mt-[0.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)]">
+          <WeatherCard />
         </div>
       </div>
 
