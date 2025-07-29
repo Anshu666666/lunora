@@ -4,10 +4,11 @@ import { useUser } from '@clerk/nextjs';
 import { useEffect, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChartListeningHistory } from '@/components/ui/chart-listening-history'
-import { Star } from "lucide-react";
+import { PieChart, Star } from "lucide-react";
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { useMonthlyStats } from './useMonthlyStats';
 import WeatherCard from '@/components/ui/weather-card';
+import PieChartC from '@/components/ui/pie-chart';
 
 interface ListeningData {
   date: string;
@@ -30,7 +31,7 @@ export default function TrackingPage() {
   const [loading, setLoading] = useState(true);
   const [listeningData, setListeningData] = useState<ListeningData[]>([]);
   const [totalSessions, setTotalSessions] = useState(0);
-    const [loadingSessions, setLoadingSessions] = useState(true);
+  const [loadingSessions, setLoadingSessions] = useState(true);
   const [timeRange, setTimeRange] = useState('30d');
   const [totalStats, setTotalStats] = useState<{
     totalSongs: number;
@@ -115,25 +116,25 @@ export default function TrackingPage() {
   }, [isLoaded, user, fetchUserProgress]);
 
   useEffect(() => {
-        // ... existing fetches for other stats
+    // ... existing fetches for other stats
 
-        const fetchTotalSessions = async () => {
-            try {
-                const response = await fetch('/api/tracking/total-sessions');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch session count');
-                }
-                const data = await response.json();
-                setTotalSessions(data.totalSessions);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoadingSessions(false);
-            }
-        };
+    const fetchTotalSessions = async () => {
+      try {
+        const response = await fetch('/api/tracking/total-sessions');
+        if (!response.ok) {
+          throw new Error('Failed to fetch session count');
+        }
+        const data = await response.json();
+        setTotalSessions(data.totalSessions);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingSessions(false);
+      }
+    };
 
-        fetchTotalSessions();
-    }, []);
+    fetchTotalSessions();
+  }, []);
 
   if (!isLoaded || loading) {
     return <div>Loading...</div>;
@@ -202,17 +203,24 @@ export default function TrackingPage() {
         </div>
 
         <div className="tracking-grid-top-right h-[25rem] rounded-[20px] md:w-[50%] w-full md:ml-[0.5rem] md:mt-0 mt-[0.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)]">
-          <WeatherCard />
+          
+          <PieChartC />
         </div>
       </div>
 
 
       {/* Bottom grid */}
-      <div className="tracking-grid-bottom w-[90%] mx-auto flex flex-col md:flex-row ">
-        <div className="tracking-grid-bottom-left md:w-[50%] w-full rounded-[20px] grid h-[14rem] md:mr-[0.5rem] md:mb-0 mb-[0.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] ">
+      <div className="tracking-grid-bottom mb-4 w-[90%] mx-auto flex flex-col md:flex-row ">
+        <div className='flex flex-col w-full h-[25rem] md:w-1/2 gap-3'>
+          <div className="tracking-grid-bottom-left w-full rounded-[20px] grid h-[14rem] md:mr-[0.5rem] md:mb-0 mb-[0.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] ">
+          </div>
+          <div className='tracking-grid-bottom-left w-full rounded-[20px] grid h-[11rem] md:mr-[0.5rem] md:mb-0 mb-[0.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)]'>
+
+          </div>
         </div>
 
-        <div className="tracking-grid-bottom-right h-[14rem] rounded-[20px] md:w-[50%] w-full md:ml-[0.5rem] md:mt-0 mt-[0.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)]">
+        <div className="tracking-grid-bottom-right h-[25rem] rounded-[20px] md:w-[50%] w-full md:ml-[0.5rem] md:mt-0 mt-[0.5rem]  backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)]">
+          <WeatherCard />
         </div>
       </div>
 
