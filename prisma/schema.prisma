@@ -16,6 +16,7 @@ datasource db {
 model Song {
   id       String   @id @default(uuid())
   song_url String
+  category String?
   duration Float?   // ⬅️ optional
   title    String?  // ⬅️ optional
   listening_sessions ListeningSession[]
@@ -31,7 +32,7 @@ model ListeningSession {
   duration_listened Float   @default(0)
   last_position    Float    @default(0)
   completed        Boolean  @default(false)
-  timerCompleted    Boolean   @default(false) // Add this new field
+  timerCompleted   Boolean  @default(false) // Add this new field
   // Relations
   song Song @relation(fields: [song_id], references: [id])
 }

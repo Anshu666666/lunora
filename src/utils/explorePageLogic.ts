@@ -26,7 +26,7 @@ export function startTrackingSession(userId: string, songId: string) {
 }
 
 
-export function endTrackingSession(userId: string, songId: string, finalTime: number) {
+export function endTrackingSession(userId: string, songId: string, finalTime: number, timerCompleted : boolean) {
   if (trackingInterval) {
     clearInterval(trackingInterval);
     trackingInterval = null;
@@ -45,7 +45,8 @@ export function endTrackingSession(userId: string, songId: string, finalTime: nu
       songId,
       sessionEnd: new Date().toISOString(),
       durationListened: Math.min(sessionDuration, finalTime),
-      lastPosition: finalTime
+      lastPosition: finalTime,
+      timerCompleted: timerCompleted
     })
   });
   
@@ -171,10 +172,11 @@ if (!user) {
         }
 
         if (musicTimer) clearTimeout(musicTimer);
-        if (countdownInterval) clearInterval(countdownInterval);
-        if (timerDisplay) timerDisplay.textContent = ""; // Clear display
+    if (countdownInterval) clearInterval(countdownInterval);
+    if (timerDisplay) timerDisplay.textContent = "";
 
-        endTrackingSession(user.id, itemData.id, music.currentTime);
+    // Pass the new flag to the tracking function
+    endTrackingSession(user.id, itemData.id, music.currentTime, isTimerCompletion);
     }
 
     function startMusicTimer(durationInSeconds: number) {
@@ -189,9 +191,9 @@ if (!user) {
 
         // 2. Set the main timer to pause the music when it ends
         musicTimer = setTimeout(() => {
-            pauseMusic(); // This will be called after the duration
-            if (timerDisplay) timerDisplay.textContent = 'Timer Finished!';
-        }, durationInSeconds * 1000);
+        pauseMusic({ isTimerCompletion: true });
+        if (timerDisplay) timerDisplay.textContent = 'Timer Finished!';
+    }, durationInSeconds * 1000);
 
         // 3. Set the countdown interval to update the display every second
         let remainingTime = durationInSeconds;

@@ -325,6 +325,14 @@ body {
     top: 3px;
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

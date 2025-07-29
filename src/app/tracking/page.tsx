@@ -28,6 +28,8 @@ export default function TrackingPage() {
   const [favoriteSong, setFavoriteSong] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [listeningData, setListeningData] = useState<ListeningData[]>([]);
+  const [totalSessions, setTotalSessions] = useState(0);
+    const [loadingSessions, setLoadingSessions] = useState(true);
   const [timeRange, setTimeRange] = useState('30d');
   const [totalStats, setTotalStats] = useState<{
     totalSongs: number;
@@ -111,6 +113,27 @@ export default function TrackingPage() {
     //  FIX 3: Add the memoized `fetchUserProgress` to the dependency array.
   }, [isLoaded, user, fetchUserProgress]);
 
+  useEffect(() => {
+        // ... existing fetches for other stats
+
+        const fetchTotalSessions = async () => {
+            try {
+                const response = await fetch('/api/tracking/total-sessions');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch session count');
+                }
+                const data = await response.json();
+                setTotalSessions(data.totalSessions);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoadingSessions(false);
+            }
+        };
+
+        fetchTotalSessions();
+    }, []);
+
   if (!isLoaded || loading) {
     return <div>Loading...</div>;
   }
@@ -169,7 +192,7 @@ export default function TrackingPage() {
 
           <div className='  rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] p-[1.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)]' >
             <p className="text-[1rem] text-gray-400">Total Sessions</p>
-            <p className="text-[3rem] font-bold text-white ">0</p>
+            <p className="text-[3rem] font-bold text-white ">{loadingSessions ? '...' : totalSessions}</p>
             <div className="flex items-center px-2 py-1 rounded-full text-sm bg-green-500/20 text-green-400">
               <span>+2 this month</span>
             </div>

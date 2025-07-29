@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
         sessionEnd,
         durationListened, // This is the total duration for the session
         lastPosition,
+        timerCompleted,
     } = await req.json();
 
     // 1. Update the ListeningSession as before
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
             session_end: new Date(sessionEnd),
             duration_listened: durationListened,
             last_position: lastPosition,
+            timerCompleted: !!timerCompleted,
         },
     });
 

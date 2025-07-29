@@ -55,24 +55,12 @@ gsap.to(page2Ref.current, {
     }
   });
 
-    // Temporary test animation
-gsap.to(".test-element", {
-  x: 500,
-  scrollTrigger: {
-    trigger: page1Ref.current,
-    start: "top center",
-    end: "bottom center",
-    scrub: 3,
-
-  }
-});
-
-
     gsap.fromTo(relax.current, { opacity: 0 },
       {
         opacity: 1,
         yPercent: 12,
-        delay: 0.5, duration: 2
+        duration: 1,
+        ease: ""
       }
     )
 
@@ -116,9 +104,8 @@ gsap.to(".test-element", {
             card: " !backdrop-blur-md !bg-[rgba(13,19,30,0.1)] !border-white/20 !rounded-xl !shadow-2xl", // for all Clerk modals
           }
         }}>
-          <div className=" flex h-[45px] px-[1.5rem] cursor-pointer text-gray-200  items-center bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] rounded-2xl gap-[0.5rem] text-[1rem] ">
-            {/* <LogIn size={16} /> */}
-            <span className="text-[1.2rem] sfpro " >Sign In</span>
+          <div className=" flex h-[3rem] px-[1.3rem] cursor-pointer text-gray-200  items-center bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] rounded-2xl gap-[0.5rem] text-[1rem] ">
+            <span className="text-[1.1rem] sfpro " >Sign In</span>
           </div>
         </SignInButton>
       </div>
@@ -149,7 +136,7 @@ gsap.to(".test-element", {
             fill
             className="bg-image z-0" // Use object-fit, not w-full/h-full
           />
-          <div className="relax absolute text-[18rem] w-[62vw] top-1/2 left-1/2 -translate-y-[46%] -translate-x-[46%] z-1 britannic">relax.</div>
+          <div ref={relax} className="relax opacity-0 absolute text-[18rem] w-[62vw] top-1/2 left-1/2 -translate-y-[58%] -translate-x-[46%] z-1 britannic">relax.</div>
           <Image
             src='/images/layer.png'
             alt="image"

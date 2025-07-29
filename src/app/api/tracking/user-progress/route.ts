@@ -56,40 +56,45 @@ const formattedProgress = progress.map((entry) => ({
 }));
 
 
-  // ✅ Calculate stats
-  const songs = await prisma.userProgress.findMany({
-    where: {
-      user_id: userId,
-    },
-    include: {
-      song: true,
+const totalSongsInDb = await prisma.song.count();
+  const totalDurationResult = await prisma.song.aggregate({
+    _sum: {
+      duration: true,
     },
   });
+  const totalDurationInDb = totalDurationResult._sum.duration ?? 0;
 
 // AFTER (The fixed code)
 const initialStats = {
-    totalSongs: 0,
-    totalDuration: 0,
+    totalSongs: totalSongsInDb,
+    totalDuration: totalDurationInDb,
     totalListened: 0,
     overallCompletion: 0,
 };
 
-const stats = songs.reduce((acc, item) => {
-    acc.totalSongs += 1;
-    acc.totalDuration += item.song.duration ?? 0;
-    acc.totalListened += item.total_duration_listened ?? 0;
-    acc.overallCompletion += item.completion_percentage ?? 0;
-    return acc;
-}, initialStats); // <-- Correctly pass the initial value object here
+const userStats = progress.reduce(
+    (acc, item) => {
+      acc.totalListened += item.total_duration_listened ?? 0;
+      acc.overallCompletion += item.completion_percentage ?? 0;
+      return acc;
+    },
+    { totalListened: 0, overallCompletion: 0 }
+  );
 
+    const finalStats = {
+      ...initialStats,
+      totalListened: userStats.totalListened,
+      overallCompletion: userStats.overallCompletion,
+    };
 
-  if (stats.totalSongs > 0) {
-    stats.overallCompletion = stats.overallCompletion / stats.totalSongs;
-  }
+    // 5. Calculate overall completion percentage based on the total number of songs
+    if (finalStats.totalSongs > 0) {
+      finalStats.overallCompletion = finalStats.overallCompletion / finalStats.totalSongs;
+    }
 
   return NextResponse.json({
     progress: formattedProgress,
-    stats,
+    stats: finalStats,
   });
   } catch (error) {
     console.error('Error in user-progress API:', error);

@@ -85,8 +85,8 @@ const sharedTransition = {
 function NavBar(): React.JSX.Element {
   return (
     <motion.nav
-      className="p-2 flex items-center justify-center rounded-2xl bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] relative overflow-hidden"
-      style={{ width: '375px', height: '45px' }}
+      className="flex items-center justify-center rounded-2xl bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] relative overflow-hidden"
+      style={{ width: '25rem', height: '3rem' }}
       initial="initial"
       whileHover="hover"
     >
@@ -119,7 +119,7 @@ function NavBar(): React.JSX.Element {
               <motion.a
                 href={item.href}
                 // MODIFIED: Removed `dark:text-gray-300` and added `text-gray-200`
-                className="flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-gray-200 group-hover:text-white transition-colors rounded-xl"
+                className="flex items-center gap-2 px-4 py-2 bg-transparent relative z-10  text-gray-200 group-hover:text-white transition-colors rounded-xl"
                 variants={itemVariants}
                 transition={sharedTransition}
                 style={{
@@ -148,7 +148,7 @@ function NavBar(): React.JSX.Element {
                 <span className={`transition-colors duration-300 ${item.iconColor}`}>
                   {item.icon}
                 </span>
-                <span className="sfpro text-[1.2rem] ">{item.label}</span>
+                <span className="sfpro text-[1rem] ">{item.label}</span>
               </motion.a>
             </motion.div>
           </motion.li>

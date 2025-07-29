@@ -1,82 +1,71 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { explorePageLogic } from "@/utils/explorePageLogic";
 import { handleClick } from "@/utils/explorePageLogic";
 import { items } from "@/lib/data";
-import { it } from "node:test";
 import { useUser } from "@clerk/nextjs";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
+import Carousel from "@/components/ui/carousel";
+
 
 export default function ExplorePage() {
-const { user } = useUser();
+    const { user } = useUser();
+    const mainRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
-        explorePageLogic()
-}, []);
 
 
+        const ctx = gsap.context(() => {
+            
+            const sections = gsap.utils.toArray<HTMLElement>(".panel");
+            
+            // 2. Set the initial positions of the sections that will slide in.
+            // .cat1 is already visible. .cat2 and .cat3 start 100% below the viewport.
+            gsap.set([".cat2", ".cat3"], { yPercent: 100 });
+
+           
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: mainRef.current, // Trigger the animation on the main container
+                    pin: true,             // Pin the container while scrolling
+                    scrub: 1,              // Smoothly "scrub" the animation on scroll (1s lag)
+                    end: () => `+=${mainRef.current!.offsetHeight * (sections.length - 1)}`,
+                    
+                    // 4. UPDATE: Snap to each of the 3 sections.
+                    // The value is 1 / (number of sections - 1), creating snap points at 0, 0.5, and 1.
+                    snap: {
+                        snapTo: 1 / (sections.length - 1),
+                        duration: 0.5,
+                        ease: "power2.inOut",
+                    }, // End after scrolling the height of one section
+                }
+            });
+
+            // Animate the second panel (.cat2) to slide up over the first one
+            timeline.to(".cat2", {
+                yPercent: 0   // Animate to its natural position (0)
+            }).to(".cat3",{
+                yPercent: 0
+            });
+
+        }, mainRef); // Scope the context to our mainRef
+
+        return () => ctx.revert(); 
+    }, []);
 
     return (
-    <div>
-        <div className="container">
-
-            <div className="slide">
-                {items.map((item) => (
-                    <div className="item" key={item.name}
-                        style={{ backgroundImage: `url(${item.imageUrl})` }}>
-                        <div className="content ">
-                            <div className="name">{item.name}</div>
-                            <div className="des">{item.description}</div>
-                            <button onClick={(e) => handleClick(e, item, user)} >Play</button>
-                            <div className="custom bg-[#e7e7e7] relative text-[#212121]   hidden">
-                                
-                                <div className="music-duration w-full flex justify-between  ">
-                                    <span id="current-time">0:00</span>
-                                    <span id="duration">0:00</span>
-                                </div>
-
-                                <div className="player-progress bg-[#fff] absolute w-[90%] h-[6px] rounded-[5px] my-[2rem] cursor-pointer " id="player-progress">
-                                    <div className="progress bg-[#212121] rounded-[5px] w-[0%] h-full transition-[width] duration-100 ease-linear " id="progress"></div>
-                                </div>
-                                <div className="flex flex-col items-center w-full mt-2">
-                                    {/* Timer display */}
-                                    <p id="timer-display" className="text-gray-400 text-sm h-5"></p> {/* h-5 to prevent layout shift */}
-
-                                    {/* Timer buttons */}
-                                    <div className="flex items-center space-x-4 mt-1">
-                                        <button data-time="60" className="timer-btn bg-gray-700 hover:bg-gray-600 text-white text-xs font-bold py-1 px-3 rounded-full">
-                                            1 min
-                                        </button>
-                                        <button data-time="180" className="timer-btn bg-gray-700 hover:bg-gray-600 text-white text-xs font-bold py-1 px-3 rounded-full">
-                                            3 min
-                                        </button>
-                                        <button data-time="300" className="timer-btn bg-gray-700 hover:bg-gray-600 text-white text-xs font-bold py-1 px-3 rounded-full">
-                                            5 min
-                                        </button>
-                                    </div>
-                                </div>
-    
-
-                                <div className="player-controls  ">
-                                    <i className="fa-solid fa-backward" title="Previous" id="prevSong"></i>
-                                    <i className="fa-solid fa-play play-button" title="Play" data-role="play" ></i>
-                                    <i className="fa-solid fa-forward" title="Next" id="nextSong"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-
-
-
+    <div className="scroll-container relative overflow-hidden w-[100vw] h-[100vh]" ref={mainRef}>
+            <div className="cat1 panel w-full h-full absolute z-1 top-0 left-0 !bg-amber-400">
+                <Carousel items={items} />
             </div>
-
-            <div className="button">
-                <button className="prev"><i
-                    className="fa-solid fa-arrow-left"></i></button>
-                <button className="next"><i
-                    className="fa-solid fa-arrow-right"></i></button>
+            <div className="cat2 panel w-full h-full absolute z-2 top-0 left-0 !bg-blue-400">
+                <Carousel items={items} />
             </div>
-
+            <div className="cat3 panel w-full h-full absolute z-3 top-0 left-0 !bg-green-400">
+                <Carousel items={items} />
+            </div>
         </div>
-    </div>
     );
 }
