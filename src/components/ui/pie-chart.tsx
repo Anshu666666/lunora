@@ -35,7 +35,7 @@ type PieLabelProps = PieSectorData &
   };
 
 const RADIAN = Math.PI / 180;
-const COLORS = ['#22c55e', '#8b5cf6', '#6b7280', '#f59e0b', '#ec4899', '#3b82f6']
+const COLORS = ['#8b5cf6', '#22c55e', '#6b7280', '#f59e0b', '#ec4899', '#3b82f6']
 
 export default function Example() {
   const [data, setData] = useState([]);
