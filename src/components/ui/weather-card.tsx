@@ -270,7 +270,7 @@ const WeatherCard: React.FC = () => {
 
                     {/* Suggestions Dropdown */}
                     {showSuggestions && (
-                        <div className="absolute top-full left-0 right-0 mt-3 bg-white/15 backdrop-blur-2xl border border-white/20 rounded-2xl max-h-48 overflow-y-auto z-50 shadow-xl">
+                        <div className="absolute top-full left-0 right-0 mt-3 bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] max-h-48 overflow-y-auto z-50 ">
                             {loadingSuggestions ? (
                                 <div className="px-5 py-4 text-white/80">
                                     Loading suggestions...

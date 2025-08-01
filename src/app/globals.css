@@ -230,21 +230,37 @@ body {
     opacity: 0;
 }
 
-.item .content{
+.item .content-container{
     position: absolute;
-    top: 50%;
-    left: 100px;
-    width: 300px;
     text-align: left;
+    background-color: #00000041;
+    border-radius: 20px;
     color: #eee;
-    transform: translate(0, -50%);
-    font-family: system-ui;
     display: none;
+}
+
+.slide .item:nth-child(2) .content-container{
+    display: block;
+    width: 100%;
+    height: 100%;
+    left: 0;
 }
 
 .slide .item:nth-child(2) .content{
     display: block;
+    position: absolute;
+    width: max-content;
+    height: max-content;
+    left: 100px;
+    top: 5rem;
 }
+
+
+.slide .item:nth-child(2) .content .custom{
+    opacity: 0;
+    animation: musicui-animate 0.3s ease-in-out 1 forwards;
+}
+
 
 .content .name{
     font-size: 40px;
@@ -279,6 +295,18 @@ body {
     to{
         opacity: 1;
         transform: translate(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes musicui-animate {
+    from{
+        opacity: 0;
+        filter: blur(20px);
+    }
+
+    to{
+        opacity: 1;
         filter: blur(0);
     }
 }
@@ -452,6 +480,7 @@ gap: 10px;
 
 .playlists::-webkit-scrollbar-track {
   background: rgb(0, 0, 0);
+  border-radius: 10px;
 }
 
 .playlists::-webkit-scrollbar-thumb {
@@ -465,3 +494,4 @@ gap: 10px;
 .playlists::-webkit-scrollbar-button {
   display: none;
 }
+

@@ -36,25 +36,6 @@ type PieLabelProps = PieSectorData &
 
 const RADIAN = Math.PI / 180;
 const COLORS = ['#22c55e', '#8b5cf6', '#6b7280', '#f59e0b', '#ec4899', '#3b82f6']
-//   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-//   const x = cx + radius * Math.cos(-(midAngle ?? 0) * RADIAN);
-//   const y = cy + radius * Math.sin(-(midAngle ?? 0) * RADIAN);
-
-//   return (
-//     <text 
-//       x={x} 
-//       y={y} 
-//       fill="white" 
-//       textAnchor="middle" 
-//       dominantBaseline="central"
-//       fontSize="12px"
-//       fontWeight="bold"
-//     >
-//       <tspan x={x} dy="0">{name}</tspan>
-//       <tspan x={x} dy="15">{`${((percent ?? 1) * 100).toFixed(0)}%`}</tspan>
-//     </text>
-//   );
-// };
 
 export default function Example() {
   const [data, setData] = useState([]);

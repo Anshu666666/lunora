@@ -7,8 +7,16 @@ import { ChartListeningHistory } from '@/components/ui/chart-listening-history'
 import { PieChart, Star } from "lucide-react";
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { useMonthlyStats } from './useMonthlyStats';
+import { useMonthlySessions } from './useMonthlySessions';
 import WeatherCard from '@/components/ui/weather-card';
 import PieChartC from '@/components/ui/pie-chart';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface ListeningData {
   date: string;
@@ -31,7 +39,6 @@ export default function TrackingPage() {
   const [loading, setLoading] = useState(true);
   const [listeningData, setListeningData] = useState<ListeningData[]>([]);
   const [totalSessions, setTotalSessions] = useState(0);
-  const [loadingSessions, setLoadingSessions] = useState(true);
   const [timeRange, setTimeRange] = useState('30d');
   const [totalStats, setTotalStats] = useState<{
     totalSongs: number;
@@ -42,6 +49,11 @@ export default function TrackingPage() {
   const { stats, loadingChart, error } = useMonthlyStats();
   if (!loadingChart && stats) {
     console.log("Current month total:", stats.currentMonthTotal);
+    console.log("Percentage change:", stats.percentageChange.toFixed(1));
+  }
+  const { sessionStats, loadingSessions } = useMonthlySessions();
+    if (!loadingSessions && stats) {
+    console.log("Current month sessions:", stats.currentMonthTotal);
     console.log("Percentage change:", stats.percentageChange.toFixed(1));
   }
 
@@ -115,26 +127,6 @@ export default function TrackingPage() {
     //  FIX 3: Add the memoized `fetchUserProgress` to the dependency array.
   }, [isLoaded, user, fetchUserProgress]);
 
-  useEffect(() => {
-    // ... existing fetches for other stats
-
-    const fetchTotalSessions = async () => {
-      try {
-        const response = await fetch('/api/tracking/total-sessions');
-        if (!response.ok) {
-          throw new Error('Failed to fetch session count');
-        }
-        const data = await response.json();
-        setTotalSessions(data.totalSessions);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoadingSessions(false);
-      }
-    };
-
-    fetchTotalSessions();
-  }, []);
 
   if (!isLoaded || loading) {
     return <div>Loading...</div>;
@@ -170,9 +162,9 @@ export default function TrackingPage() {
                 <span>Error loading stats</span>
               </div>
             ) : stats ? (
-              <div className={`flex items-center px-2 py-1 rounded-full text-sm ${stats.percentageChange >= 0 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+              <div className={`flex items-center px-2 py-1 rounded-full text-[0.8rem] ${stats.percentageChange >= 0 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
                 {stats.percentageChange >= 0 ? <ArrowUp size={16} className="mr-1" /> : <ArrowDown size={16} className="mr-1" />}
-                <span>{stats.percentageChange.toFixed(1)}%</span>
+                <span>{stats.percentageChange.toFixed(1)}% v/s Last Month</span>
               </div>
             ) : (
               <div className="flex items-center px-2 py-1 rounded-full text-sm bg-gray-500/20 text-gray-400">
@@ -183,21 +175,33 @@ export default function TrackingPage() {
           </div>
 
           <div className='  rounded-br-[20px] rounded-tl-[20px] rounded-tr-[20px] p-[1.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)]' >
-            <p className="text-[1rem] text-gray-400">Total Songs</p>
+            <p className="text-[1rem] !text-gray-200">Total Songs</p>
             <p className="text-[3rem] font-bold text-white ">{totalStats?.totalSongs ?? 0}</p>
+            <div className={`flex items-center px-2 py-1 rounded-full text-[0.8rem] bg-green-500/20 text-green-400`}>
+                <ArrowUp size={16} className="mr-1" />
+                <span>+2 sounds this week</span>
+            </div>
           </div>
 
           <div className='  rounded-tl-[20px] rounded-bl-[20px] rounded-br-[20px] p-[1.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] ' >
-            <p className="text-[1rem] text-gray-400 mb-[1rem] ">Total Duration</p>
-            <p className="text-[3rem] font-bold text-white ">{formatTime(totalStats?.totalDuration ?? 0)}</p>
+            <p className="text-[1rem] !text-gray-200 mb-[1rem] ">Total Duration</p>
+            <p className="text-[2.7rem] leading-[2.7rem] font-bold text-white ">{formatTime(totalStats?.totalDuration ?? 0)}</p>
           </div>
 
           <div className='  rounded-tr-[20px] rounded-bl-[20px] rounded-br-[20px] p-[1.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)]' >
-            <p className="text-[1rem] text-gray-400">Total Sessions</p>
-            <p className="text-[3rem] font-bold text-white ">{loadingSessions ? '...' : totalSessions}</p>
-            <div className="flex items-center px-2 py-1 rounded-full text-sm bg-green-500/20 text-green-400">
-              <span>+2 this month</span>
-            </div>
+            <p className="text-[1rem] !text-gray-200">Total Sessions</p>
+            <p className="text-[3rem] font-bold text-white ">{loadingSessions ? '...' : sessionStats?.currentMonthTotal}</p>
+            {sessionStats ? (
+              <div className={`flex items-center px-2 py-1 rounded-full text-[0.8rem] ${sessionStats.percentageChange >= 0 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                {sessionStats.percentageChange >= 0 ? <ArrowUp size={16} className="mr-1" /> : <ArrowDown size={16} className="mr-1" />}
+                <span>{sessionStats.percentageChange} sessions vs Last Month</span>
+              </div>
+            ) : (
+              <div className="flex items-center px-2 py-1 rounded-full text-sm bg-gray-500/20 text-gray-400">
+                <span>N/A</span>
+              </div>
+            )}
+
           </div>
 
         </div>
@@ -212,10 +216,9 @@ export default function TrackingPage() {
       {/* Bottom grid */}
       <div className="tracking-grid-bottom mb-4 w-[90%] mx-auto flex flex-col md:flex-row ">
         <div className='flex flex-col w-full h-[25rem] md:w-1/2 gap-3'>
-          <div className="tracking-grid-bottom-left w-full rounded-[20px] grid h-[14rem] md:mr-[0.5rem] md:mb-0 mb-[0.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] ">
+          <div className="tracking-grid-bottom-left-top w-full h-[50%] rounded-[20px] md:mr-[0.5rem] md:mb-0 mb-[0.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] ">
           </div>
-          <div className='tracking-grid-bottom-left w-full rounded-[20px] grid h-[11rem] md:mr-[0.5rem] md:mb-0 mb-[0.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)]'>
-
+          <div className='tracking-grid-bottom-left-bottom w-full h-[50%] rounded-[20px] md:mr-[0.5rem] md:mb-0 mb-[0.5rem] bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)]'>
           </div>
         </div>
 
@@ -239,9 +242,9 @@ export default function TrackingPage() {
       </div> */}
 
       {/* Individual Song Progress */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="bg-white mt-[3rem] mb-[4rem] rounded-lg shadow-md overflow-hidden">
         <table className="min-w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-200">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Song
@@ -309,17 +312,15 @@ export default function TrackingPage() {
 
 
 
-      <div>
-        <label htmlFor="timeRangeSelect">Select Time Range: </label>
-        <select
-          id="timeRangeSelect"
-          value={timeRange}
-          onChange={(e) => setTimeRange(e.target.value)}
-        >
-          <option value="30d">Last 30 Days</option>
-          <option value="3m">Last 3 Months</option>
-        </select>
-      </div>
+      <Select value={timeRange} onValueChange={setTimeRange}>
+        <SelectTrigger className="w-[180px] mb-[1rem] bg-[#0000003e] backdrop-blur-lg ">
+          <SelectValue placeholder="Select Time Range"  />
+        </SelectTrigger>
+        <SelectContent className='bg-[#00000012] backdrop-blur-md shadow-[1px_1px_10px_rgba(255,255,255,0.2)]' >
+          <SelectItem value="30d" className=' text-white focus:text-amber-200 focus:bg-[#0000002f] focus:backdrop-blur-sm ' >Last 30 Days</SelectItem>
+          <SelectItem value="3m" className=' text-white focus:text-amber-200 focus:bg-[#0000002f] focus:backdrop-blur-sm ' >Last 3 Months</SelectItem>
+        </SelectContent>
+      </Select>
 
       {loading ? (
         <p>Loading chart...</p>
@@ -332,10 +333,24 @@ export default function TrackingPage() {
   );
 }
 
-function formatTime(seconds: number): string {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = Math.floor(seconds % 60);
-  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+function formatTime(seconds: number): React.ReactNode {
+  // Check if the total seconds is one hour or more (3600 seconds)
+  if (seconds >= 3600) {
+    const hours = Math.floor(seconds / 3600);
+    const remainingSeconds = seconds % 3600;
+    const minutes = Math.floor(remainingSeconds / 60);
+    return (
+      <span>{hours}<span className=' text-[1.5rem] ml-[0.3rem] text-gray-300 '>hr</span><br></br>{minutes}<span className=' text-[1.5rem] ml-[0.3rem] text-gray-300 '>min</span></span>
+    );
+  } else {
+    // Original logic for durations less than an hour
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return (
+      <span>{minutes}:{remainingSeconds.toString().padStart(2, '0')}</span>
+    );
+  }
 }
+
 
 

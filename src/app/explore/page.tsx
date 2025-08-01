@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 // FIX 6: Removed unused imports: explorePageLogic, handleClick, Card components, framer-motion div
-import { items } from "@/lib/data";
+import { items1, items2, items3 } from "@/lib/data";
 
 import { useUser } from "@clerk/nextjs";
 import gsap from "gsap";
@@ -78,13 +78,13 @@ export default function ExplorePage() {
         <div>
             <div className="scroll-container relative overflow-hidden w-[100vw] h-[100vh]" ref={mainRef}>
                 <div className="cat1 panel w-full h-full absolute z-1 top-0 left-0 !bg-amber-400">
-                    <Carousel items={items} />
+                    <Carousel items={items1} />
                 </div>
                 <div className="cat2 panel w-full h-full absolute z-2 top-[100%] left-0 !bg-blue-400">
-                    <Carousel items={items} />
+                    <Carousel items={items2} />
                 </div>
                 <div className="cat3 panel w-full h-full absolute z-3 top-[100%] left-0 !bg-green-400">
-                    <Carousel items={items} />
+                    <Carousel items={items3} />
                 </div>
             </div>
 

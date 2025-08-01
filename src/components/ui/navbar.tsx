@@ -2,7 +2,8 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import { Home, ChartLine, AudioLines } from 'lucide-react'; // Removed unused imports
-
+import { useUser, useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 // --- MenuBar Component ---
 
 interface MenuItem {
@@ -11,6 +12,7 @@ interface MenuItem {
   href: string;
   gradient: string;
   iconColor: string;
+  isProtected?: boolean;
 }
 
 const menuItems: MenuItem[] = [
@@ -29,6 +31,7 @@ const menuItems: MenuItem[] = [
     gradient: "radial-gradient(circle, rgba(249,115,22,0.15) 0%, rgba(234,88,12,0.06) 50%, rgba(194,65,12,0) 100%)",
     // MODIFIED: Removed the dark mode variant
     iconColor: "group-hover:text-orange-400",
+    isProtected: true,
   },
   {
     icon: <ChartLine className="h-5 w-5" />,
@@ -37,6 +40,7 @@ const menuItems: MenuItem[] = [
     gradient: "radial-gradient(circle, rgba(34,197,94,0.15) 0%, rgba(22,163,74,0.06) 50%, rgba(21,128,61,0) 100%)",
     // MODIFIED: Removed the dark mode variant
     iconColor: "group-hover:text-green-400",
+    isProtected: true,
   },
 ];
 
@@ -83,6 +87,24 @@ const sharedTransition = {
 };
 
 function NavBar(): React.JSX.Element {
+  const { isSignedIn } = useUser();
+  const { openSignIn } = useClerk();
+  const router = useRouter();
+
+  // --- NEW: Create a click handler function ---
+  const handleNavClick = (event: React.MouseEvent, item: MenuItem) => {
+    // Prevent the default link navigation to handle it programmatically
+    event.preventDefault();
+
+    if (item.isProtected && !isSignedIn) {
+      // If the route is protected and the user is not signed in, open the modal
+      openSignIn();
+    } else {
+      // Otherwise, navigate to the href
+      router.push(item.href);
+    }
+  };
+
   return (
     <motion.nav
       className="flex items-center justify-center rounded-2xl bg-[#0000003e] backdrop-blur-lg border border-[#a4a4a434] shadow-[4px_3px_10px_rgba(255,255,255,0.2)] relative overflow-hidden"
@@ -110,22 +132,16 @@ function NavBar(): React.JSX.Element {
               <motion.div
                 className="absolute inset-0 z-0 pointer-events-none rounded-2xl"
                 variants={glowVariants}
-                style={{
-                  background: item.gradient,
-                  opacity: 0,
-                }}
+                style={{ background: item.gradient, opacity: 0 }}
               />
-              {/* Front-facing menu item */}
+              {/* --- MODIFIED: Both <a> tags now use the onClick handler --- */}
               <motion.a
                 href={item.href}
-                // MODIFIED: Removed `dark:text-gray-300` and added `text-gray-200`
-                className="flex items-center gap-2 px-4 py-2 bg-transparent relative z-10  text-gray-200 group-hover:text-white transition-colors rounded-xl"
+                onClick={(e) => handleNavClick(e, item)}
+                className="flex items-center gap-2 px-4 py-2 bg-transparent relative z-10 text-gray-200 group-hover:text-white transition-colors rounded-xl"
                 variants={itemVariants}
                 transition={sharedTransition}
-                style={{
-                  transformStyle: "preserve-3d",
-                  transformOrigin: "center bottom"
-                }}
+                style={{ transformStyle: "preserve-3d", transformOrigin: "center bottom" }}
               >
                 <span className={`transition-colors duration-300 ${item.iconColor}`}>
                   {item.icon}
@@ -135,7 +151,7 @@ function NavBar(): React.JSX.Element {
               {/* Back-facing menu item for the 3D flip effect */}
               <motion.a
                 href={item.href}
-                // MODIFIED: Removed `dark:text-gray-300` and added `text-gray-200`
+                onClick={(e) => handleNavClick(e, item)}
                 className="flex items-center gap-2 px-4 py-2 absolute inset-0 z-10 bg-transparent text-gray-200 group-hover:text-white transition-colors rounded-xl"
                 variants={backVariants}
                 transition={sharedTransition}

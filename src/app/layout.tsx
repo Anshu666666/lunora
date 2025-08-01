@@ -4,6 +4,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from '../components/ui/theme-provider'
 import NavBar from "@/components/ui/navbar";
+import ClickSpark from "@/components/animations/ClickSpark/ClickSpark";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +28,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
+    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}  appearance={{
+            elements: {
+              modalBackdrop: "!bg-[#ffff]/10 ",
+              card: "!backdrop-blur-md !bg-[rgba(13,19,30,0.2)] !border-white/20 !rounded-xl !shadow-2xl",
+            }
+          }} >
           <html lang="en" suppressHydrationWarning>
       <head>
               <link rel="stylesheet"
@@ -37,6 +44,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ClickSpark
+            sparkColor='#e3b605'
+            sparkSize={15}
+            sparkRadius={15}
+            sparkCount={8}
+            duration={400}
+          >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -46,8 +60,10 @@ export default function RootLayout({
           <div className="navbar fixed top-[0.6rem] left-1/2 -translate-x-1/2 z-50 ">
             <NavBar />
           </div>
+          {/* <div className=" bg-amber-400 w-[100vw] h-[100vh] " >Helo</div> */}
           {children}
         </ThemeProvider>
+      </ClickSpark>
       </body>
     </html>
     </ClerkProvider>

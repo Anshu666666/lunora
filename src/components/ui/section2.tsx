@@ -76,22 +76,22 @@ const Section2: React.FC = () => {
   ]
 
   return (
-    <div className=' '>
-      <div >
-        <h1 className='text-left px-14 font-sans p-5 font-black'>RECOMMENDED PLAYLISTS</h1>
+    <div className=' my-[3rem] '>
+      <div className=' mb-[2rem] flex items-center ' >
+        <h1 className='text-left px-14 text-[2rem] font-sans font-black'>RECOMMENDED <span className='underline ml-[0.5rem] unbounded ' >playlists</span></h1>
       </div>
-      <div className='playlists flex gap-4 p-4 overflow-x-scroll'>
+      <div className='playlists mx-[1rem] flex items-center gap-4 overflow-x-scroll h-[82%] '>
         {playlists.map((playlist, index) => (
-          <div key={index} className='flex-shrink-0 flex flex-col items-center p-4 rounded-lg w-[32vw]'>
+          <div key={index} className='flex-shrink-0 flex flex-col items-center mb-[3.5rem] rounded-lg w-[29vw]'>
             <Image 
               src={playlist.image} 
               alt={playlist.title} 
               width={200}
               height={200}
-              className='w-78 h-78 object-cover rounded-lg mb-4' 
+              className='w-[18rem] h-[18rem] object-cover rounded-lg mb-4' 
             />
             {/* <h2 className='text-lg font-semibold mb-2 text-center'>{playlist.title}</h2> */}
-            <p className='text-sm w-[80%] text-left text-gray-400'>{playlist.description}</p>
+            <p className='text-sm w-[85%] text-left text-gray-400'>{playlist.description}</p>
           </div>
         ))}
       </div>

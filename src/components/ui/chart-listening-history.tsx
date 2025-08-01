@@ -39,7 +39,7 @@ const chartConfig = {
 
 export function ChartListeningHistory({ data }: ChartListeningHistoryProps) {
   return (
-    <Card>
+    <Card className=" !bg-[#0000007a] !backdrop-blur-lg !shadow-[2px_2px_15px_rgba(0,0,0,0.2)]  " >
       <CardHeader>
         <CardTitle>Listening History</CardTitle>
         <CardDescription>
@@ -56,6 +56,7 @@ export function ChartListeningHistory({ data }: ChartListeningHistoryProps) {
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+              interval={2}
             />
             <YAxis
               dataKey="minutesListened"

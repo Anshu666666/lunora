@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { handleClick } from "@/utils/explorePageLogic"; // Your existing handleClick logic
-import { items as initialItems } from "@/lib/data"; // Assuming this is the type
+import { items1 as initialItems } from "@/lib/data"; // Assuming this is the type
 
 // Define the type for a single item
 type Item = {
@@ -22,6 +22,7 @@ type CarouselProps = {
 const ItemCard = ({ item, onPlayClick }:{ item: Item, onPlayClick: (e: React.MouseEvent<HTMLButtonElement>) => void }) => (
         <div className="item" key={item.name}
             style={{ backgroundImage: `url(${item.imageUrl})` }}>
+          <div className="content-container">
             <div className="content ">
                 <div className="name">{item.name}</div>
                 <div className="des">{item.description}</div>
@@ -62,6 +63,7 @@ const ItemCard = ({ item, onPlayClick }:{ item: Item, onPlayClick: (e: React.Mou
                     </div>
                 </div>
             </div>
+          </div>
         </div>
     )
 
