@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
     try {
         const { userId } = await auth();
 
+
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
@@ -26,6 +27,9 @@ export async function GET(req: NextRequest) {
                 }
             }
         });
+
+        console.log('Progress data found:', progressData.length, 'records');
+        console.log('Sample data:', progressData[0]);
 
         // Group by category and count
         const categoryCount = progressData.reduce((acc, entry) => {
