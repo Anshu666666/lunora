@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 // FIX 6: Removed unused imports: explorePageLogic, handleClick, Card components, framer-motion div
-import { items1, items2, items3 } from "@/lib/data";
+import { items1, items2, items3, items4,items5,items6 } from "@/lib/data";
 
 import { useUser } from "@clerk/nextjs";
 import gsap from "gsap";
@@ -60,6 +60,12 @@ export default function ExplorePage() {
                 yPercent: -100
             }).to(".cat3", {
                 yPercent: -100
+            }).to(".cat4", {
+                yPercent: -100
+            }).to(".cat5", {
+                yPercent: -100
+            }).to(".cat6", {
+                yPercent: -100
             });
         }, mainRef);
 
@@ -85,6 +91,15 @@ export default function ExplorePage() {
                 </div>
                 <div className="cat3 panel w-full h-full absolute z-3 top-[100%] left-0 !bg-green-400">
                     <Carousel items={items3} />
+                </div>
+                <div className="cat4 panel w-full h-full absolute z-4 top-[100%] left-0 !bg-cyan-400">
+                    <Carousel items={items4} />
+                </div>
+                <div className="cat5 panel w-full h-full absolute z-5 top-[100%] left-0 !bg-fuchsia-400">
+                    <Carousel items={items5} />
+                </div>
+                <div className="cat6 panel w-full h-full absolute z-6 top-[100%] left-0 !bg-purple-400">
+                    <Carousel items={items6} />
                 </div>
             </div>
 

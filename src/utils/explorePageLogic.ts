@@ -1,4 +1,4 @@
-import { items } from "@/lib/data";
+import { items1 } from "@/lib/data";
 import { useUser } from '@clerk/nextjs';
 
 let musicTimer: NodeJS.Timeout | null = null;
@@ -19,9 +19,17 @@ export function startTrackingSession(userId: string, songId: string) {
       songId,
       sessionStart: new Date().toISOString()
     })
-  }).then(res => res.json())
+  }).then(res => {
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    return res.json();
+  })
     .then(data => {
       currentSessionId = data.sessionId;
+    })
+    .catch(error => {
+      console.error('Error starting tracking session:', error);
     });
 }
 
@@ -78,7 +86,7 @@ let currentAudio: HTMLAudioElement | null = null;
 let currentPlayBtn: HTMLElement | null = null;
 
 
-export function handleClick(e: React.MouseEvent<HTMLButtonElement>, itemData: typeof items[number], user : any) {
+export function handleClick(e: React.MouseEvent<HTMLButtonElement>, itemData: typeof items1[number], user : any) {
     const button = e.currentTarget,
     item = button.closest(".item"), // Find the closest parent .item
     customDiv = item?.querySelector(".custom") as HTMLElement,
@@ -214,7 +222,7 @@ if (!user) {
         countdownInterval = setInterval(updateCountdown, 1000);
     }
 
-    function loadMusic(song: typeof items[number]) {
+    function loadMusic(song: typeof items1[number]) {
         music.src = song.songUrl;
     }
 
