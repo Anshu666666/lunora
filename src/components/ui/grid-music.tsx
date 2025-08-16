@@ -95,7 +95,8 @@ const AudioPlayer: React.FC = () => {
     <div className="bg-[#dedede4f] backdrop-blur-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white w-[70%] h-[50%] rounded-lg shadow-lg flex flex-col items-center justify-center select-none">
       <audio ref={songRef} src="/audio/nature.mp3" preload="metadata" muted />
 
-      <div className='title sfpro w-full flex justify-center text-[0.8rem] text-black '>Nature's Bliss</div>
+      {/* FIX: Escaped the apostrophe in "Nature's" */}
+      <div className='title sfpro w-full flex justify-center text-[0.8rem] text-black '>Nature&apos;s Bliss</div>
 
       {/* Timestamps */}
       <div className="w-[90%] flex sfpro justify-between text-[0.7rem] font-mono ">

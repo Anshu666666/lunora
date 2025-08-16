@@ -130,7 +130,6 @@ export default function ExplorePage() {
                             <div key={message.id} className={`mb-[1rem] ${message.role === "user" ? "text-right" : "text-left"}`}>
                                 <div className={`inline-block p-2 rounded-[10px] ${message.role === "user" ? "bg-amber-200 text-[#1f2937]" : "bg-blue-500 text-white"}`}>
                                     <ReactMarkdown
-                                        children={message.content}
                                         remarkPlugins={[remarkGfm]}
                                         components={{
                                             code: (props) => {
@@ -141,10 +140,13 @@ export default function ExplorePage() {
                                                     <pre {...rest as React.HTMLAttributes<HTMLPreElement>} className="bg-gray-800 text-white p-2 my-2 rounded"><code>{children}</code></pre>
                                                 );
                                             },
-                                            ul: ({ children }) => <ul className="list-disc ml-[1rem]">{children}</ul>,
-                                            ol: ({ children }) => <ol className="list-decimal ml-[1rem]">{children}</ol>,
+                                            // FIX: Changed to explicitly pass props.children to avoid react/no-children-prop error.
+                                            ul: (props) => <ul className="list-disc ml-[1rem]">{props.children}</ul>,
+                                            ol: (props) => <ol className="list-decimal ml-[1rem]">{props.children}</ol>,
                                         }}
-                                    />
+                                    >
+                                        {message.content}
+                                    </ReactMarkdown>
                                 </div>
                             </div>
                         ))}

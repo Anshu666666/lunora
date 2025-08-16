@@ -74,7 +74,8 @@ export default function Example() {
           dataKey="value"
         >
           {data.map((entry, index) => (
-            <Cell stroke='none' fill={COLORS[index % COLORS.length]} />
+            // FIX: Added a unique key for each item in the iterator.
+            <Cell key={`cell-${index}`} stroke='none' fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
         <Legend verticalAlign="middle" align="right" layout="vertical" iconType="circle" />

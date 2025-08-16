@@ -89,12 +89,6 @@ export default function TrackingPage() {
     fetchDashboardData();
   }, [timeRange, isLoaded, user]);
 
-  useEffect(() => {
-    if (isLoaded && user) {
-      fetchUserProgress();
-    }
-  }, [isLoaded, user]);
-
   const fetchUserProgress = useCallback(async () => {
     if (!user) return; // Guard clause in case user is not available
 
@@ -124,7 +118,7 @@ export default function TrackingPage() {
     if (isLoaded && user) {
       fetchUserProgress();
     }
-    //  FIX 3: Add the memoized `fetchUserProgress` to the dependency array.
+    //  FIX: Add the memoized `fetchUserProgress` to the dependency array.
   }, [isLoaded, user, fetchUserProgress]);
 
 
@@ -351,6 +345,3 @@ function formatTime(seconds: number): React.ReactNode {
     );
   }
 }
-
-
-
