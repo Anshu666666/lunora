@@ -35,26 +35,26 @@ type PieLabelProps = PieSectorData &
   };
 
 const RADIAN = Math.PI / 180;
-const COLORS = ['#22c55e', '#8b5cf6', '#6b7280', '#f59e0b', '#ec4899', '#3b82f6']
+const COLORS = ['#10b981', '#8b5cf6', '#f8fafc', '#fbbf24', '#ec4899', '#3b82f6'];
 
 export default function Example() {
   const [data, setData] = useState([]);
-  const [total, setTotal] = useState(0);
+  const [totalMinutes, setTotalMinutes] = useState(0);
 
   useEffect(() => {
     fetch("/api/tracking/songs-by-genre")
       .then(res => res.json())
       .then(res => {
         setData(res.chartData);
-        setTotal(res.totalSongs);
+        setTotalMinutes(res.totalMinutes);
         console.log("Pie chart data:", res.chartData);
-        console.log(res.totalSongs)
+        console.log("Total minutes:", res.totalMinutes)
       });
   }, []);
   return (
     <>
     <div className="text-white text-center text-2xl mt-5 mb-3 font-semibold">
-        Songs by Category ({total})
+        Listening Time by Category ({totalMinutes.toFixed(1)} min)
       </div> 
     <ResponsiveContainer className="flex justify-center items-center w-full" height="80%">
            

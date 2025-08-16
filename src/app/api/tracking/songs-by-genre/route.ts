@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
     try {
         const { userId } = await auth();
 
+
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
@@ -27,24 +28,28 @@ export async function GET(req: NextRequest) {
             }
         });
 
-        // Group by category and count
-        const categoryCount = progressData.reduce((acc, entry) => {
+        console.log('Progress data found:', progressData.length, 'records');
+        console.log('Sample data:', progressData[0]);
+
+        // Group by category and sum total duration listened
+        const categoryDuration = progressData.reduce((acc, entry) => {
             const category = entry.song?.category || 'Unknown';
-            acc[category] = (acc[category] || 0) + 1;
+            const duration = entry.total_duration_listened || 0;
+            acc[category] = (acc[category] || 0) + duration;
             return acc;
         }, {} as Record<string, number>);
 
-        // Format the data for the pie chart
-        const chartData = Object.entries(categoryCount).map(([category, count]) => ({
+        // Format the data for the pie chart (convert seconds to minutes for better readability)
+        const chartData = Object.entries(categoryDuration).map(([category, totalSeconds]) => ({
             name: category,
-            value: count
+            value: Math.round(totalSeconds / 60 * 100) / 100 // Convert to minutes and round to 2 decimal places
         }));
 
-        const totalSongs = chartData.reduce((sum, item) => sum + item.value, 0);
+        const totalMinutes = chartData.reduce((sum, item) => sum + item.value, 0);
 
         return NextResponse.json({
             chartData,
-            totalSongs
+            totalMinutes: Math.round(totalMinutes * 100) / 100
         }, { status: 200 });
 
     } catch (error) {
